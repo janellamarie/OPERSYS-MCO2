@@ -1,4 +1,4 @@
-package main;
+package using_locks;
 
 public class Station {
 	/* NOTES:
