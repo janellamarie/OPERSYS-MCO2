@@ -1,5 +1,7 @@
 # OPERSYS (MCO2 - Synchronization)
-CalTrain Automation Contributors: 
-(1) Janella Marie Co
-(2) Jose Antonio Gana
-(3) Harvey Lallave
+CalTrain Automation <br><br> Contributors: 
+<ol>
+<li>Janella Marie Co
+<li>Jose Antonio Gana
+<li>Harvey Lallave
+</ol>
