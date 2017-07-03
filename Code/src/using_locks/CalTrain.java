@@ -10,12 +10,16 @@ public class CalTrain {
 
 	public void station_load_train(Station station, int count){
 		/* NOTES: 
-		 * 1. count - how many seats are available on the train
+		 * 1. count - how many seats are available on the train XD
 		 * 2. either puno na yung train or lahat ng naghihintay na passenger
 		 * nakasakay na bago mag end yung funtion
 		 * 3. number of seats may vary among trains and should be treated as
-		 * input parameter
+		 * input parameter XD
 		 */
+		
+		station.createTrain(count);
+		System.out.println("Successfully created Train!");
+		
 	} 
 	
 	public void station_wait_for_train(Station station){
@@ -44,9 +48,4 @@ public class CalTrain {
 	 *  3. allow multiple passengers to board simultaneously
 	 *  4. must not result in busy waiting
 	 */
-	
-	public static void main(String[] args){
-		
-	}
-
 }
