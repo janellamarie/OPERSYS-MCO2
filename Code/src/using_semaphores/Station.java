@@ -1,5 +1,7 @@
 package using_semaphores;
 
+import using_locks.Train;
+
 import java.util.ArrayList;
 
 public class Station {
