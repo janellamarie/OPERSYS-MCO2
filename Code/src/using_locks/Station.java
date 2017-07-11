@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class Station {
 	
-	private ArrayList<Train> trains;
+	private ArrayList<Train> trains; //16 trains lang ba per station OR 16 trains all in all?
 	
 	public Station(){
 		trains = new ArrayList<Train>();
