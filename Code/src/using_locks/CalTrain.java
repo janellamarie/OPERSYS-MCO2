@@ -1,24 +1,49 @@
 package using_locks;
 
+import java.util.Scanner;
+
 public class CalTrain {
 	
+	public Station stations[];
+	public Train trains[];
+	public Scanner scan; 
+	
+	public CalTrain() {
+		station_init();
+	}
+	
 	public void station_init(){
+		
 		/* NOTES: 
 		 * 1. used to invoke station object
+		 * 2. 8 stations lang
+		 * 3. 16 trains all in all
 		 */
+		
+		stations = new Station[8];
+		trains = new Train[16];
+		
+		for(int i = 0; i < 8; i++){
+			stations[i] = new Station();
+		}
+		
+		if(stations != null)
+			System.out.println("Successfully created eight trains!");
+	
 	}
 
 	public void station_load_train(Station station, int count){
+		
 		/* NOTES: 
-		 * 1. count - how many seats are available on the train XD
+		 * 1. count - how many seats are available on the train
 		 * 2. either puno na yung train or lahat ng naghihintay na passenger
 		 * nakasakay na bago mag end yung funtion
 		 * 3. number of seats may vary among trains and should be treated as
-		 * input parameter XD
+		 * input parameter 
 		 */
 		
 		station.createTrain(count);
-		System.out.println("Successfully created Train!");
+		System.out.println("Successfully created Train with " + count + " available seats.");
 		
 	} 
 	
