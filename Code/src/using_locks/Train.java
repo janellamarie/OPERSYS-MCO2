@@ -1,12 +1,15 @@
 package using_locks;
 
-public class Train {
+public class Train extends Thread{
 
 	private int occupiedSeats;
 	private int vacantSeats;
+
+	private int train_number;
 	
-	public Train(int count){
+	public Train(int train_number, int count){
 		occupiedSeats = count;
+		this.train_number = train_number;
 	}
 	
 	public int getOccupiedSeats() {
@@ -20,5 +23,13 @@ public class Train {
 	}
 	public void setVacantSeats(int vacantSeats) {
 		this.vacantSeats = vacantSeats;
+	}
+
+	public int getTrain_number() {
+		return train_number;
+	}
+
+	public void setTrain_number(int train_number) {
+		this.train_number = train_number;
 	}
 }
