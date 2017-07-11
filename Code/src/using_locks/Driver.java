@@ -38,7 +38,7 @@ public class Driver {
 
 		
 		CalTrain calTrain = new CalTrain();	
-		Station x = new Station();
+		Station x = new Station(1);
 		
 		calTrain.station_load_train(x, 10);
 	}
