@@ -38,7 +38,7 @@ public class CalTrain extends Thread{
 	
 	}
 
-	public void station_load_train(Station station, int count){
+	public void station_load_train(Station station, int count, int train_number){
 		
 		/* NOTES: 
 		 * 1. count - how many seats are available on the train
@@ -49,7 +49,7 @@ public class CalTrain extends Thread{
 		 */
 
 
-		//station.createTrain(,count);
+		station.createTrain(train_number,count);
 		System.out.println("Successfully created Train with " + count + " available seats.");
 		
 	} 
