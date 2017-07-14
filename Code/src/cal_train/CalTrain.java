@@ -1,26 +1,17 @@
 package cal_train;
 
-import java.util.concurrent.locks.Condition;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
-import java.util.concurrent.Semaphore;
-
 public class CalTrain implements Runnable {
 	
-	/** Global Variables **/
-	
-	public static Station stations[];
-	public static Train trains[];
-	public static Semaphore semaphore;
-	public static Semaphore station_mutex;
-	public static Lock station_lock = new ReentrantLock();
-	public static Condition trainArrival = station_lock.newCondition();
-	
 	/** Local Variables **/
+	private Station station;
+	
+	public void start(){
+		System.out.println("STARTING THREAD");
+		station_init();
+	}
 	
 	public void run(){
 		System.out.println("RUNNING THREAD");
-		station_init();
 	}
 	
 	public void station_init(){
@@ -28,17 +19,20 @@ public class CalTrain implements Runnable {
 		/* NOTES: 
 		 * 1. used to invoke station object
 		 * 2. 8 stations lang
-		 * 3. 16 trains all in all
+		 * 3. 15 trains all in all
 		 */
 		
-		stations = new Station[8];
-		trains = new Train[15];
-		
-		for(int i = 0; i < 8; i++){
-			stations[i] = new Station(i+1);
-		}
-		
-		System.out.println("SUCCESSFULLY INITIALIZED STATIONS");
+		for(int i = 0; i < 8; i++)	
+			if(Driver.stations[i] == null){
+				station = new Station(i+1);
+				Driver.stations[i] = station;
+				System.out.println("SUCCESSFULLY INITIALIZED STATION");
+				break;
+			} else {
+				System.out.println("ERROR INITIALIZING STATION");
+				 break;
+			}
+			
 	}
 
 	public void station_load_train(Station station, int count){
@@ -51,7 +45,7 @@ public class CalTrain implements Runnable {
 		 * input parameter 
 		 */
 
-		station.createTrain(count, trains);
+		station.createTrain(count);
 		System.out.println("Successfully created Train with " + count + " available seats.");
 	} 
 	
@@ -62,14 +56,14 @@ public class CalTrain implements Runnable {
 		 */
 		
 		System.out.println("Waiting for Train");
-		station_lock.lock();
+		Driver.station_lock.lock();
 	}
 	
 	public void station_on_board(Station station){
 		
 		/* NOTES: 
 		 * 1. called pag naka-board na si passenger
-		 */
+		 */		
 
 	}
 	
@@ -87,4 +81,13 @@ public class CalTrain implements Runnable {
 	 *  3. allow multiple passengers to board simultaneously
 	 *  4. must not result in busy waiting
 	 */
+	
+
+	public Station getStation() {
+		return station;
+	}
+
+	public void setStation(Station station) {
+		this.station = station;
+	}
 }
