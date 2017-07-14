@@ -1,12 +1,14 @@
-package using_semaphores;
+package cal_train;
 
-public class Train {
+public class Train extends Thread{
 
+	private int train_number;
 	private int occupiedSeats;
 	private int vacantSeats;
 	
-	public Train(int count){
-		occupiedSeats = count;
+	public Train(int train_number, int count){
+		vacantSeats = count;
+		this.train_number = train_number;
 	}
 	
 	public int getOccupiedSeats() {
@@ -20,5 +22,13 @@ public class Train {
 	}
 	public void setVacantSeats(int vacantSeats) {
 		this.vacantSeats = vacantSeats;
+	}
+
+	public int getTrain_number() {
+		return train_number;
+	}
+
+	public void setTrain_number(int train_number) {
+		this.train_number = train_number;
 	}
 }

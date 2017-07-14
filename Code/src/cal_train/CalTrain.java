@@ -1,20 +1,25 @@
-package using_locks;
+package cal_train;
 
-import java.util.Scanner;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.concurrent.Semaphore;
 
-public class CalTrain extends Thread{
+public class CalTrain implements Runnable {
 	
-	public Station stations[];
-	public Train trains[];
-	public Scanner scan;
-
-	private Lock station_lock = new ReentrantLock();
-	private Condition trainArrival = station_lock.newCondition();
+	/** Global Variables **/
 	
-	public CalTrain() {
+	public static Station stations[];
+	public static Train trains[];
+	public static Semaphore semaphore;
+	public static Semaphore station_mutex;
+	public static Lock station_lock = new ReentrantLock();
+	public static Condition trainArrival = station_lock.newCondition();
+	
+	/** Local Variables **/
+	
+	public void run(){
+		System.out.println("RUNNING THREAD");
 		station_init();
 	}
 	
@@ -27,18 +32,16 @@ public class CalTrain extends Thread{
 		 */
 		
 		stations = new Station[8];
-		trains = new Train[16];
+		trains = new Train[15];
 		
 		for(int i = 0; i < 8; i++){
 			stations[i] = new Station(i+1);
 		}
 		
-		if(stations != null)
-			System.out.println("Successfully created eight trains!");
-	
+		System.out.println("SUCCESSFULLY INITIALIZED STATIONS");
 	}
 
-	public void station_load_train(Station station, int count, int train_number){
+	public void station_load_train(Station station, int count){
 		
 		/* NOTES: 
 		 * 1. count - how many seats are available on the train
@@ -48,23 +51,22 @@ public class CalTrain extends Thread{
 		 * input parameter 
 		 */
 
-
-		station.createTrain(train_number,count);
+		station.createTrain(count, trains);
 		System.out.println("Successfully created Train with " + count + " available seats.");
-		
 	} 
 	
 	public void station_wait_for_train(Station station){
+		
 		/* NOTES:
 		 * 1. pag dumating si passenger eto yung tatawagin
 		 */
-			System.out.println("Waiting for Train");
-			station_lock.lock();
-
-
+		
+		System.out.println("Waiting for Train");
+		station_lock.lock();
 	}
 	
 	public void station_on_board(Station station){
+		
 		/* NOTES: 
 		 * 1. called pag naka-board na si passenger
 		 */
