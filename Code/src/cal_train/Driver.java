@@ -58,7 +58,7 @@ public class Driver extends Application {
 		mainPane.setId("mainPane");
 		Scene scene = new Scene(mainPane, 1000, 650);
 		primaryStage.setTitle("CaltrainII (OPERSYS MP2)");
-		primaryStage.getIcons().add(new Image("using_locks/images/trainSubIcon.png"));
+		primaryStage.getIcons().add(new Image("images/trainSubIcon.png"));
 		scene.getStylesheets().add("Style.css");
 		primaryStage.setResizable(false);
 		primaryStage.setScene(scene);
@@ -80,7 +80,7 @@ public class Driver extends Application {
 		gridPane.setId("rightGridPane");
 
 		//Train Number
-		ImageView trainIcon = new ImageView("using_locks/images/trainSubIcon.png");
+		ImageView trainIcon = new ImageView("images/trainSubIcon.png");
 		trainIcon.setFitHeight(50);
 		trainIcon.setFitWidth(50);
 		trainIcon.setPreserveRatio(true);
@@ -94,7 +94,7 @@ public class Driver extends Application {
 		gridPane.getChildren().addAll(trainIcon, trainTextField);
 
 		//People
-		ImageView peopleIcon = new ImageView("using_locks/images/peopleIcon.png");
+		ImageView peopleIcon = new ImageView("images/peopleIcon.png");
 		peopleIcon.setFitHeight(50);
 		peopleIcon.setFitWidth(50);
 		peopleIcon.setPreserveRatio(true);
@@ -123,7 +123,7 @@ public class Driver extends Application {
 		field.setId("centerPane");
 
 		for(int i = 0; i < 8; i++){
-			ImageView peopleIcon = new ImageView("using_locks/images/station.png");
+			ImageView peopleIcon = new ImageView("images/station.png");
 			peopleIcon.setFitHeight(100);
 			peopleIcon.setFitWidth(100);
 			peopleIcon.setPreserveRatio(true);
