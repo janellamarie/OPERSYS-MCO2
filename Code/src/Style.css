@@ -25,8 +25,12 @@
     -fx-background-color : rgba(149, 149, 149, 0.53);
 	-fx-pref-width		 : 700;
     -fx-alignment: center;
-
 }
+
+#centerPane{
+ 	 -fx-pref-width		 : 700;
+     -fx-pref-width		 : 700;
+ }
 
 #mainPane{
     -fx-background-image: url("images/train_station_bg.jpg");
