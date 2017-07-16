@@ -79,9 +79,9 @@ public class Driver extends Application {
 		gridPane.setId("rightGridPane");
 
 		//Train Number
-		ImageView trainIcon = new ImageView("images/trainSubIcon.png");
-		trainIcon.setFitHeight(50);
-		trainIcon.setFitWidth(50);
+		ImageView trainIcon = new ImageView("images/trainSubIcon2.png");
+		trainIcon.setFitHeight(25);
+		trainIcon.setFitWidth(25);
 		trainIcon.setPreserveRatio(true);
 
 		trainTextField = new TextField();
@@ -93,9 +93,9 @@ public class Driver extends Application {
 		gridPane.getChildren().addAll(trainIcon, trainTextField);
 
 		//People
-		ImageView peopleIcon = new ImageView("images/peopleIcon.png");
-		peopleIcon.setFitHeight(50);
-		peopleIcon.setFitWidth(50);
+		ImageView peopleIcon = new ImageView("images/peopleIcon2.png");
+		peopleIcon.setFitHeight(25);
+		peopleIcon.setFitWidth(25);
 		peopleIcon.setPreserveRatio(true);
 
 		peopleTextField = new TextField();
@@ -159,14 +159,20 @@ public class Driver extends Application {
                 train1 = new ImageView("images/train1.png");
                 train1.setFitHeight(50);
                 train1.setFitWidth(50);
-                train1.setLayoutX(15);
+                train1.setLayoutX(225);
+                train1.setLayoutY(425);
+            } else if(i < 4){
+                train1.setLayoutX(225 + (75 * i));
                 train1.setLayoutY(425);
             } else if(i < 8){
-                train1.setLayoutX(i == 1 ? 80 : 75 * i);
-                train1.setLayoutY(425);
-            } else{
-                train1.setLayoutX(i == 8 ? 15 : i == 9 ? 80 : 75 * (i - 8));
+                train1.setLayoutX(225 + (75 * (i - 4)));
                 train1.setLayoutY(450);
+            } else if(i < 12){
+                train1.setLayoutX(225 + (75 * (i - 8)));
+                train1.setLayoutY(475);
+            } else if(i < 16){
+                train1.setLayoutX(225 + (75 * (i - 12)));
+                train1.setLayoutY(500);
             }
 
             train1.setRotate(train1.getRotate() + 90);
