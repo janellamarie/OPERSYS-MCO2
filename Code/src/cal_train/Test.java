@@ -1,5 +1,6 @@
 package cal_train;
 
+import javafx.animation.PathTransition;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.geometry.Pos;
@@ -12,7 +13,9 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Polygon;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.locks.Condition;
@@ -44,8 +47,8 @@ public class Test extends Application {
         semaphore = new Semaphore(0);
         mutex = new Semaphore(1);
 
-       // CalTrain calTrain = new CalTrain();
-       // calTrain.start();
+//        CalTrain calTrain = new CalTrain();
+//        calTrain.start();
 
         launch(args);
     }
@@ -79,9 +82,9 @@ public class Test extends Application {
         gridPane.setId("rightGridPane");
 
         //Train Number
-        ImageView trainIcon = new ImageView("images/trainSubIcon.png");
-        trainIcon.setFitHeight(50);
-        trainIcon.setFitWidth(50);
+        ImageView trainIcon = new ImageView("images/trainSubIcon2.png");
+        trainIcon.setFitHeight(25);
+        trainIcon.setFitWidth(25);
         trainIcon.setPreserveRatio(true);
 
         trainTextField = new TextField();
@@ -93,9 +96,9 @@ public class Test extends Application {
         gridPane.getChildren().addAll(trainIcon, trainTextField);
 
         //People
-        ImageView peopleIcon = new ImageView("images/peopleIcon.png");
-        peopleIcon.setFitHeight(50);
-        peopleIcon.setFitWidth(50);
+        ImageView peopleIcon = new ImageView("images/peopleIcon2.png");
+        peopleIcon.setFitHeight(25);
+        peopleIcon.setFitWidth(25);
         peopleIcon.setPreserveRatio(true);
 
         peopleTextField = new TextField();
@@ -150,6 +153,14 @@ public class Test extends Application {
             field.getChildren().add(trainStation);
         }
 
+
+        Polygon polyline = new Polygon();
+        polyline.getPoints().addAll(
+                0.0, 0.0,
+                600.0, 0.0,
+                0.0,0.0);
+
+
         for(int i = 0; i < 16; i++){
             ImageView train1 = new ImageView("images/train2.png");
             train1.setFitHeight(50);
@@ -159,22 +170,37 @@ public class Test extends Application {
                 train1 = new ImageView("images/train1.png");
                 train1.setFitHeight(50);
                 train1.setFitWidth(50);
-                train1.setLayoutX(15);
+                train1.setLayoutX(225);
+                train1.setLayoutY(425);
+            } else if(i < 4){
+                train1.setLayoutX(225 + (75 * i));
                 train1.setLayoutY(425);
             } else if(i < 8){
-                train1.setLayoutX(i == 1 ? 80 : 75 * i);
-                train1.setLayoutY(425);
-            } else{
-                train1.setLayoutX(i == 8 ? 15 : i == 9 ? 80 : 75 * (i - 8));
+                train1.setLayoutX(225 + (75 * (i - 4)));
                 train1.setLayoutY(450);
+            } else if(i < 12){
+                train1.setLayoutX(225 + (75 * (i - 8)));
+                train1.setLayoutY(475);
+            } else if(i < 16){
+                train1.setLayoutX(225 + (75 * (i - 12)));
+                train1.setLayoutY(500);
             }
 
             train1.setRotate(train1.getRotate() + 90);
             train1.setPreserveRatio(true);
 
+
             train1.setOnMouseClicked(e -> {
-                System.out.println("WA");
+                System.out.println(((ImageView)e.getSource()).getLayoutX());
+                PathTransition transition = new PathTransition();
+                transition.setOrientation(PathTransition.OrientationType.ORTHOGONAL_TO_TANGENT);
+                transition.setNode((ImageView)e.getSource());
+                transition.setDuration(Duration.seconds(5));
+                transition.setPath(polyline);
+                transition.setCycleCount(1);
+                transition.play();
             });
+
             train1.setId("train"+i);
 
             field.getChildren().add(train1);
