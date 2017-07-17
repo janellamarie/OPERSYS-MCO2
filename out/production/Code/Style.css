@@ -18,14 +18,24 @@
 
 
 
-#rightGridPane > .text-field:disabled {
+#rightGridPane > .text-field, #rightGridPane >  .text-field:disabled,
+#rightGridPane > .spinner > .text-field, #rightGridPane >  .spinner{
 	-fx-text-fill		 : wheat;
 	-fx-max-width		 : 150;
 	-fx-max-height		 : 25 ;
 	-fx-prompt-text-fill : lightGray;
-	-fx-background-color : rgba(0, 0, 0, 1);
+	-fx-background-color : rgba(0, 0, 0, .5);
 	-fx-border-color 	 : darkgray;
     -fx-alignment        : center;
+    -fx-opacity          : 1.0;
+}
+
+#rightGridPane > .spinner > .radio-button{
+	-fx-text-fill		 : wheat;
+	-fx-prompt-text-fill : lightGray;
+	-fx-background-color : rgba(0, 0, 0, .5);
+	-fx-border-color 	 : darkgray;
+    -fx-opacity          : 1.0;
 }
 
 #vBoxCenter{
