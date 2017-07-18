@@ -21,7 +21,7 @@
 #rightGridPane > .text-field, #rightGridPane >  .text-field:disabled,
 #rightGridPane > .spinner > .text-field, #rightGridPane >  .spinner{
 	-fx-text-fill		 : wheat;
-	-fx-max-width		 : 150;
+	-fx-pref-width		 : 150;
 	-fx-max-height		 : 25 ;
 	-fx-prompt-text-fill : lightGray;
 	-fx-background-color : rgba(0, 0, 0, .5);

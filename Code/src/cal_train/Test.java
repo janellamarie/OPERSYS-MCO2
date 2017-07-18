@@ -38,7 +38,9 @@ public class Test extends Application {
 
     private BorderPane mainPane;
     private TextField peopleTextField,
-            trainTextField;
+            trainOrStationTextField;
+
+    private ImageView trainOrStationIcon;
 
     public static void main(String[] args){
         stations = new Station[8];
@@ -81,19 +83,19 @@ public class Test extends Application {
         GridPane gridPane = new GridPane();
         gridPane.setId("rightGridPane");
 
-        //Train Number
-        ImageView trainIcon = new ImageView("images/trainSubIcon2.png");
-        trainIcon.setFitHeight(25);
-        trainIcon.setFitWidth(25);
-        trainIcon.setPreserveRatio(true);
+        //Train Number or Station Number
+        trainOrStationIcon = new ImageView("images/trainSubIcon2.png");
+        trainOrStationIcon.setFitHeight(25);
+        trainOrStationIcon.setFitWidth(25);
+        trainOrStationIcon.setPreserveRatio(true);
 
-        trainTextField = new TextField();
-        trainTextField.setDisable(true);
-        trainTextField.setPromptText("Train Number");
+        trainOrStationTextField = new TextField();
+        trainOrStationTextField.setDisable(true);
+        trainOrStationTextField.setPromptText("Train Number");
 
-        GridPane.setConstraints(trainIcon, 0, 0);
-        GridPane.setConstraints(trainTextField, 1, 0);
-        gridPane.getChildren().addAll(trainIcon, trainTextField);
+        GridPane.setConstraints(trainOrStationIcon, 0, 0);
+        GridPane.setConstraints(trainOrStationTextField, 1, 0);
+        gridPane.getChildren().addAll(trainOrStationIcon, trainOrStationTextField);
 
         //People
         ImageView peopleIcon = new ImageView("images/peopleIcon2.png");
@@ -124,12 +126,14 @@ public class Test extends Application {
 
         for(int i = 0; i < 8; i++){
             ImageView trainStation = new ImageView("images/station.png");
-            trainStation.setId("station"+i);
+            trainStation.setId("" + i);
             trainStation.setFitHeight(100);
             trainStation.setFitWidth(100);
             trainStation.setPreserveRatio(true);
 
             trainStation.setOnMouseClicked(e -> {
+                trainOrStationIcon.setImage(new Image("images/station.png"));
+                trainOrStationTextField.setText(((ImageView)e.getSource()).getId());
                 System.out.println(((ImageView)e.getSource()).getId());   //UPDATE RIGHT VBOX
             });
 
@@ -208,10 +212,12 @@ public class Test extends Application {
                     100.0, train1.getY(),
                     train1.getX(), train1.getY());
 
-            polyline.setTranslateZ(1);
             if(i % 4 == 0)
                 field.getChildren().add(polyline);
+
             train1.setOnMouseClicked(e -> {
+                trainOrStationIcon.setImage(new Image("images/trainSubIcon2.png"));
+                trainOrStationTextField.setText(((ImageView)e.getSource()).getId());
                 System.out.println(((ImageView)e.getSource()).getX() + " " + ((ImageView)e.getSource()).getTranslateX());
                 PathTransition transition = new PathTransition();
                 transition.setOrientation(PathTransition.OrientationType.ORTHOGONAL_TO_TANGENT);
@@ -222,8 +228,7 @@ public class Test extends Application {
                 transition.play();
             });
 
-            train1.setId("train"+i);
-            train1.setTranslateZ(2);
+            train1.setId("" + i);
 
             field.getChildren().add(train1);
         }
