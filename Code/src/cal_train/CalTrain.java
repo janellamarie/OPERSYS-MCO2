@@ -29,12 +29,9 @@ public class CalTrain implements Runnable {
                     train.start();
                     trains.add(train);
                     trainlimit++;
-
             }
 			Thread.sleep(1000);
         }
-
-
 	}
 	
 	public void run(){
