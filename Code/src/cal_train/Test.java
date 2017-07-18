@@ -3,10 +3,8 @@ package cal_train;
 import javafx.animation.PathTransition;
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Spinner;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
@@ -35,12 +33,15 @@ public class Test extends Application {
     public static Condition trainArrival = station_lock.newCondition();
 
     /** GUI **/
+    private boolean semaphoreMachine = true;        //use this to check if the user wants a semaphore machine or lock(?)
 
     private BorderPane mainPane;
     private TextField peopleTextField,
-            trainOrStationTextField;
+            trainTextField,
+            stationTextField,
+            seatsTextField;
+    private ChoiceBox<Integer> destinationChoiceBox;
 
-    private ImageView trainOrStationIcon;
 
     public static void main(String[] args){
         stations = new Station[8];
@@ -69,10 +70,42 @@ public class Test extends Application {
         primaryStage.show();
         primaryStage.setOnCloseRequest(e -> terminateProgram());
 
+        mainPane.setTop(initTopBar());
         mainPane.setRight(initRightVBox());
         mainPane.setCenter(initCenterVBox());
-        mainPane.setAlignment(mainPane.getRight(), Pos.CENTER);
-        mainPane.setAlignment(mainPane.getCenter(), Pos.CENTER);
+    }
+
+    public MenuBar initTopBar(){
+
+        //Menu
+        Menu menu = new Menu("_Menu");
+        Menu machine = new Menu("_Machine");
+
+        //Initializing menu items
+        MenuItem exit    = new MenuItem("_Exit");
+        MenuItem about   = new MenuItem("_About");
+        MenuItem semaphore   = new MenuItem("_Semaphore");
+        MenuItem lock   = new MenuItem("_Lock");
+
+        machine.getItems().addAll(semaphore, lock);
+        menu.getItems().addAll(machine, new SeparatorMenuItem(), about, exit);
+
+        MenuBar menuBar = new MenuBar();
+        menuBar.getMenus().addAll(menu);
+
+        exit.setOnAction(e -> terminateProgram());
+
+        semaphore.setOnAction(e -> {
+            mainPane.setRight(initRightVBox());
+            mainPane.setCenter(initCenterVBox());
+        });
+
+        lock.setOnAction(e -> {
+            mainPane.setRight(initRightVBox());
+            mainPane.setCenter(initCenterVBox());
+        });
+
+        return menuBar;
     }
 
     public VBox initRightVBox()
@@ -83,19 +116,45 @@ public class Test extends Application {
         GridPane gridPane = new GridPane();
         gridPane.setId("rightGridPane");
 
-        //Train Number or Station Number
-        trainOrStationIcon = new ImageView("images/trainSubIcon2.png");
-        trainOrStationIcon.setFitHeight(25);
-        trainOrStationIcon.setFitWidth(25);
-        trainOrStationIcon.setPreserveRatio(true);
+        //Station Number
+        ImageView stationIcon = new ImageView("images/station.png");
+        stationIcon.setFitHeight(25);
+        stationIcon.setFitWidth(25);
+        stationIcon.setPreserveRatio(true);
 
-        trainOrStationTextField = new TextField();
-        trainOrStationTextField.setDisable(true);
-        trainOrStationTextField.setPromptText("Train Number");
+        stationTextField = new TextField();
+        stationTextField.setDisable(true);
+        stationTextField.setPromptText("Station Number");
 
-        GridPane.setConstraints(trainOrStationIcon, 0, 0);
-        GridPane.setConstraints(trainOrStationTextField, 1, 0);
-        gridPane.getChildren().addAll(trainOrStationIcon, trainOrStationTextField);
+        //Train Number
+        ImageView trainIcon = new ImageView("images/trainSubIcon2.png");
+        trainIcon.setFitHeight(25);
+        trainIcon.setFitWidth(25);
+        trainIcon.setPreserveRatio(true);
+
+        trainTextField = new TextField();
+        trainTextField.setDisable(true);
+        trainTextField.setPromptText("Train Number");
+
+        //Seats for the train
+        ImageView seatsIcon = new ImageView("images/trainSubIcon2.png");    // Update trainIcon
+        seatsIcon.setFitHeight(25);
+        seatsIcon.setFitWidth(25);
+        seatsIcon.setPreserveRatio(true);
+
+        seatsTextField = new TextField();
+        seatsTextField.setDisable(true);
+        seatsTextField.setPromptText("Train available seats / seats");
+
+        GridPane.setConstraints(stationIcon, 0, 0);
+        GridPane.setConstraints(stationTextField, 1, 0);
+        GridPane.setConstraints(trainIcon, 0, 1);
+        GridPane.setConstraints(trainTextField, 1, 1);
+        GridPane.setConstraints(seatsIcon, 0, 2);
+        GridPane.setConstraints(seatsTextField, 1, 2);
+        gridPane.getChildren().addAll(stationIcon, stationTextField,
+                                      trainIcon, trainTextField,
+                                      seatsIcon, seatsTextField);
 
         //People
         ImageView peopleIcon = new ImageView("images/peopleIcon2.png");
@@ -108,9 +167,19 @@ public class Test extends Application {
         peopleTextField.setDisable(true);
         peopleTextField.setPromptText("Number of People");
 
-        GridPane.setConstraints(peopleIcon, 0, 1);
-        GridPane.setConstraints(spinner, 1, 1);
-        gridPane.getChildren().addAll(spinner, peopleIcon);
+        //Destination
+        ImageView destinationIcon = new ImageView("images/peopleIcon2.png"); // Update destinationIcon
+        destinationIcon.setFitHeight(25);
+        destinationIcon.setFitWidth(25);
+        destinationIcon.setPreserveRatio(true);
+        destinationChoiceBox = new ChoiceBox<Integer>();
+        destinationChoiceBox.getItems().addAll(0, 1, 2, 3, 4, 5, 6, 7);
+
+        GridPane.setConstraints(peopleIcon, 0, 3);
+        GridPane.setConstraints(spinner, 1, 3);
+        GridPane.setConstraints(destinationIcon, 0, 4);
+        GridPane.setConstraints(destinationChoiceBox, 1, 4);
+        gridPane.getChildren().addAll(spinner, peopleIcon, destinationIcon, destinationChoiceBox);
 
         vBox.getChildren().addAll(gridPane);
         return vBox;
@@ -132,8 +201,9 @@ public class Test extends Application {
             trainStation.setPreserveRatio(true);
 
             trainStation.setOnMouseClicked(e -> {
-                trainOrStationIcon.setImage(new Image("images/station.png"));
-                trainOrStationTextField.setText(((ImageView)e.getSource()).getId());
+                stationTextField.setText(((ImageView)e.getSource()).getId());
+                //Update Train number
+                trainTextField.setText("Train number");
                 System.out.println(((ImageView)e.getSource()).getId());   //UPDATE RIGHT VBOX
             });
 
@@ -216,13 +286,15 @@ public class Test extends Application {
                 field.getChildren().add(polyline);
 
             train1.setOnMouseClicked(e -> {
-                trainOrStationIcon.setImage(new Image("images/trainSubIcon2.png"));
-                trainOrStationTextField.setText(((ImageView)e.getSource()).getId());
+                trainTextField.setText(((ImageView)e.getSource()).getId());
+                seatsTextField.setText("A/T Seats");
+                destinationChoiceBox.setValue(0);
+                destinationChoiceBox.setDisable(true);
                 System.out.println(((ImageView)e.getSource()).getX() + " " + ((ImageView)e.getSource()).getTranslateX());
                 PathTransition transition = new PathTransition();
                 transition.setOrientation(PathTransition.OrientationType.ORTHOGONAL_TO_TANGENT);
                 transition.setNode((ImageView)e.getSource());
-                transition.setDuration(Duration.seconds(5));
+                transition.setDuration(Duration.seconds(10));
                 transition.setPath(polyline);
                 transition.setCycleCount(1);
                 transition.play();
