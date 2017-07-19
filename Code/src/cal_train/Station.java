@@ -1,6 +1,7 @@
 package cal_train;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Random;
 import java.util.concurrent.locks.Condition;
@@ -14,10 +15,13 @@ public class Station extends Thread{
 
 	Random r = new Random();
 	int time;
-	private CalTrain calTrain;
+	CalTrain calTrain;
 
 	private Lock station_lock = new ReentrantLock();
 	private Condition passenger_arrival = station_lock.newCondition();
+	private Condition train_leave = station_lock.newCondition();
+
+	private ArrayList<Passengers> waiting_passengers;
 
 	private int passengers_waiting;
 
@@ -26,6 +30,7 @@ public class Station extends Thread{
 		time = r.nextInt(999);
 		this.calTrain = calTrain;
 		passengers_waiting = 5;
+		waiting_passengers = new ArrayList<>();
 	}
 
 //	public void createTrain(int count){
@@ -41,6 +46,10 @@ public class Station extends Thread{
 //				 break;
 //			}
 //	}
+
+	public void addPassengers(Passengers pass){
+		waiting_passengers.add(pass);
+	}
 
 	public int getStation_number () {
 		return station_number;
@@ -82,6 +91,19 @@ public class Station extends Thread{
 		this.station_lock = station_lock;
 	}
 
+	public void getOffPassengers(){
+
+		for (int i = 0; i < getCurr_train().getPassengers().size(); i++) {
+			if (getStation_number() == getCurr_train().getPassengers().get(i).getDestination());
+				getCurr_train().removePassengers(i);
+		}
+	}
+
+	public void getInPassengers(Passengers passenger){
+		curr_train.addPassengers(passenger);
+	}
+
+
 	public String getCurrTime(){
 		Calendar cal = Calendar.getInstance();
 		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
@@ -96,7 +118,14 @@ public class Station extends Thread{
 			passenger_arrival.signalAll();
 			this.curr_train = train;
 			calTrain.station_load_train(this, curr_train.getVacantSeats());
-			Thread.sleep(2000);
+
+			System.out.println(waiting_passengers.size());
+			Thread.sleep(1000);
+			if(waiting_passengers.size() > 0) {
+				System.out.println("waiting");
+				train_leave.await();
+			}
+
 		} finally {
 			this.curr_train = null;
 			station_lock.unlock();
@@ -107,9 +136,12 @@ public class Station extends Thread{
 	public void passengers_waiting(){
 		station_lock.lock();
 		try {
+			System.out.println("Passengers are waiting");
 			passenger_arrival.await();
-			System.out.println("Train arrived " + getStation_number());
+			System.out.println("Train arrived " + getCurr_train().getTrain_number());
 			//System.out.println("Train " + getCurr_train().getTrain_number() + " is Here" + " in Station " + getStation_number());
+			Thread.sleep(10000);
+			train_leave.signalAll();
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -124,15 +156,14 @@ public class Station extends Thread{
 
 
 	public void run() {
+	//passengers_waiting();
 
-			//passengers_waiting();
-
-//				try {
-//					calTrain.station_wait_for_train(this);
-//				} catch (InterruptedException e) {
-//					e.printStackTrace();
-//				}
-
+			while(true) {
+				for (int i = 0; i < waiting_passengers.size(); i++) {
+					System.out.println("dfsa");
+					waiting_passengers.get(i).run();
+				}
+			}
 
 	}
 }

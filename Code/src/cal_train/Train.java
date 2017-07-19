@@ -13,10 +13,12 @@ public class Train implements Runnable{
 	private int next_station;
 
 	private ArrayList<Station> stations;
+	private ArrayList<Passengers> passengers;
 
 
 	public Train(int train_number, int count, ArrayList<Station> stations){
 		vacantSeats = count;
+		passengers = new ArrayList<Passengers>();
 		this.train_number = train_number;
 		this.stations = stations;
 	}
@@ -58,6 +60,22 @@ public class Train implements Runnable{
 		this.next_station = next_station;
 	}
 
+	public ArrayList<Passengers> getPassengers() {
+		return passengers;
+	}
+
+	public void setPassengers(ArrayList<Passengers> passengers) {
+		this.passengers = passengers;
+	}
+
+	public void removePassengers(int ctr){
+		passengers.remove(ctr);
+	}
+
+	public void addPassengers(Passengers passenger){
+		passengers.add(passenger);
+	}
+
 	public void getCurrTime(){
 		Calendar cal = Calendar.getInstance();
 		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
@@ -76,6 +94,5 @@ public class Train implements Runnable{
 				}
 			}
 		}
-
 	}
 }

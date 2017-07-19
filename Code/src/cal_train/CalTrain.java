@@ -20,18 +20,30 @@ public class CalTrain implements Runnable {
 		station_init();
         System.out.println("STARTING THREAD");
 
-        int trainlimit = 0;
+        int trainlimit = 3;
 
-		while(true){
+			for (int i = 0 ; i < trainlimit; i++){
+				Thread train = new Thread(new Train(i+1, 15, stations));
+				train.start();
+				trains.add(train);
+				Thread.sleep(1000);
+			}
 
-		    if(stations.get(0).getCurr_train() == null && trainlimit < 5){
-                    Thread train = new Thread(new Train(trainlimit+1, 15, stations));
-                    train.start();
-                    trains.add(train);
-                    trainlimit++;
-            }
-			Thread.sleep(1000);
-        }
+
+		System.out.println("PAM");
+
+		for(int i = 0; i < stations.size(); i++){
+
+			for(int j = 0; j < 5; j++){
+				Passengers pass = new Passengers(station, 5);
+				stations.get(i).addPassengers(pass);
+			}
+
+		}
+
+
+
+
 	}
 	
 	public void run(){
@@ -49,8 +61,13 @@ public class CalTrain implements Runnable {
 
 
 		//Initialize Stations
-		for(int i = 0; i < 8; i++){
+		for(int i = 0; i < 2; i++){
 			Station station = new Station(i+1, this);
+
+
+//			for(int j = 0; j < 5; j++){
+//				Passengers pass = new Passengers(station, 5);
+//			}
 			//created new caltrains
 			station.start();
 			stations.add(station);
@@ -66,7 +83,7 @@ public class CalTrain implements Runnable {
 		 * 3. number of seats may vary among trains and should be treated as
 		 * input parameter
 		 */
-
+		System.out.println("There are " + station.getCurr_train().getVacantSeats() + " in Train " + station.getCurr_train().getTrain_number());
 
 
 
@@ -74,8 +91,8 @@ public class CalTrain implements Runnable {
 	
 	public void station_wait_for_train(Station station) throws InterruptedException {
 
-        station.passengers_waiting();
-
+		System.out.println("passenger is now waiting");
+		station.passengers_waiting();
 
 	}
 	
@@ -93,6 +110,14 @@ public class CalTrain implements Runnable {
 		Calendar cal = Calendar.getInstance();
 		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
 		System.out.println( sdf.format(cal.getTime()) );
+	}
+
+	public ArrayList<Station> getStations() {
+		return stations;
+	}
+
+	public void setStations(ArrayList<Station> stations) {
+		this.stations = stations;
 	}
 
 	public Station getStation() {
