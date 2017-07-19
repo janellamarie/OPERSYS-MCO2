@@ -30,7 +30,6 @@ public class CalTrain implements Runnable {
 			}
 
 
-		System.out.println("PAM");
 
 		for(int i = 0; i < stations.size(); i++){
 
@@ -48,7 +47,6 @@ public class CalTrain implements Runnable {
 	
 	public void run(){
 		System.out.println("RUNNING THREAD");
-
 	}
 	
 	public void station_init(){
