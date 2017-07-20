@@ -13,14 +13,30 @@ public class CalTrain implements Runnable {
 	private Station station;
 	private Lock station_lock = new ReentrantLock();
 	private Condition train_arrival = station_lock.newCondition();
+	private Condition train_leave =  station_lock.newCondition();
 	ArrayList<Station> stations = new ArrayList<Station>();
 	public static ArrayList trains = new ArrayList<Thread>();
+
 
 	public void start() throws InterruptedException {
 		station_init();
         System.out.println("STARTING THREAD");
 
-        int trainlimit = 3;
+        int trainlimit = 1;
+
+
+
+		for(int i = 0; i < stations.size(); i++){
+			for(int j = 0; j < 5; j++){
+				Passengers pass = new Passengers(stations.get(i), 5);
+				pass.start();
+				stations.get(i).addPassengers(pass);
+			}
+		}
+
+		for(int i = 0; i < stations.size(); i++){
+			System.out.println("Station " + stations.get(i).getStation_number() + " has " + stations.get(i).getWaiting_passengers().size());
+		}
 
 			for (int i = 0 ; i < trainlimit; i++){
 				Thread train = new Thread(new Train(i+1, 15, stations));
@@ -28,19 +44,6 @@ public class CalTrain implements Runnable {
 				trains.add(train);
 				Thread.sleep(1000);
 			}
-
-
-
-		for(int i = 0; i < stations.size(); i++){
-
-			for(int j = 0; j < 5; j++){
-				Passengers pass = new Passengers(station, 5);
-				stations.get(i).addPassengers(pass);
-			}
-
-		}
-
-
 
 
 	}
@@ -59,7 +62,7 @@ public class CalTrain implements Runnable {
 
 
 		//Initialize Stations
-		for(int i = 0; i < 2; i++){
+		for(int i = 0; i < 8; i++){
 			Station station = new Station(i+1, this);
 
 
@@ -82,16 +85,23 @@ public class CalTrain implements Runnable {
 		 * input parameter
 		 */
 		System.out.println("There are " + station.getCurr_train().getVacantSeats() + " in Train " + station.getCurr_train().getTrain_number());
-
-
-
 	} 
 	
 	public void station_wait_for_train(Station station) throws InterruptedException {
-
-		System.out.println("passenger is now waiting");
-		station.passengers_waiting();
-
+//		station_lock.lock();
+//		try{
+//			train_arrival.await();
+//			System.out.println("Train " + station.getCurr_train().getTrain_number() + " has arrived in station " + station.getStation_number());
+//
+//			station
+//
+//		}catch (InterruptedException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} catch(NullPointerException n){
+//		}finally {
+//			station_lock.unlock();
+//		}
 	}
 	
 	public void station_on_board(Station station){
@@ -99,9 +109,8 @@ public class CalTrain implements Runnable {
 		/* NOTES:
 		 * 1. called pag naka-board na si passenger
 		 */
+
 	}
-
-
 
 
 	public void getCurrTime(){

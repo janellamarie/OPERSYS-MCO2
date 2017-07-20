@@ -17,7 +17,7 @@ public class Driver {
 	public static Lock station_lock = new ReentrantLock();
 	public static Condition trainArrival = station_lock.newCondition();
 	
-	public static void main(String[] args){
+	public static void main(String[] args) throws InterruptedException {
 		
 		stations = new Station[8]; 
 		trains = new Train[15];

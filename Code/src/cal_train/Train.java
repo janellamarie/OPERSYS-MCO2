@@ -70,10 +70,12 @@ public class Train implements Runnable{
 
 	public void removePassengers(int ctr){
 		passengers.remove(ctr);
+		vacantSeats++;
 	}
 
 	public void addPassengers(Passengers passenger){
 		passengers.add(passenger);
+		vacantSeats--;
 	}
 
 	public void getCurrTime(){
