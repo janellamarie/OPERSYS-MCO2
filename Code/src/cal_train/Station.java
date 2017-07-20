@@ -115,9 +115,10 @@ public class Station extends Thread{
 
 
 	public void getInPassengers(Passengers pass){
-		System.out.println("Hello");
+		//System.out.println("Hello");
 		if(curr_train.getVacantSeats() > 0){
 			curr_train.addPassengers(pass);
+			passengers_waiting--;
 		}else{
 			passengers_waiting(pass);
 		}
@@ -146,12 +147,13 @@ public class Station extends Thread{
 				this.curr_train = train;
 				calTrain.station_load_train(this, curr_train.getVacantSeats());
 
-				System.out.println("# of passengers ing Station " + getStation_number() + ": " + waiting_passengers.size());
+				System.out.println("# of passengers ing Station " + getStation_number() + ": " + passengers_waiting);
 				Thread.sleep(1000);
-				if (waiting_passengers.size() > 0) {
+				if (passengers_waiting > 0 && train.getVacantSeats() > 0) {
 					System.out.println("waiting");
 					train_leave.await();
 				}
+				System.out.println("# of passengers ing Station " + getStation_number() + ": " + passengers_waiting);
 			}
 
 		} finally {
@@ -167,7 +169,7 @@ public class Station extends Thread{
 		station_lock.lock();
 		try {
 			passenger_arrival.await();
-			System.out.println("Train arrived " + getCurr_train().getTrain_number());
+			//System.out.println("Train arrived " + getCurr_train().getTrain_number());
             getInPassengers(pass);
 			Thread.sleep(1000);
 			train_leave.signalAll();
