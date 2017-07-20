@@ -1,0 +1,136 @@
+/*.root{
+	-fx-background-image: url("lightrain.gif");
+	-fx-font-size		 : 14;
+	
+}
+*/
+
+#vBoxRight{
+    -fx-background-color : rgba(98, 78, 64, 0.5);
+	-fx-pref-width		 : 300;
+	-fx-alignment        : center;
+
+}
+
+#rightGridPane{
+    -fx-alignment        : center;
+}
+
+#rightGridPane > .text-field, #rightGridPane >  .text-field:disabled,
+#rightGridPane > .spinner > .text-field, #rightGridPane >  .spinner /*> .text-field:disabled */,
+.choice-box, .choice-box:disabled, .choice-box > .label{
+	-fx-text-fill		 : wheat;
+	-fx-pref-width		 : 150;
+	-fx-max-height		 : 25 ;
+    -fx-opacity          : 1.0;
+	-fx-prompt-text-fill : lightGray;
+	-fx-background-color : rgba(0, 0, 0, .5);
+	-fx-border-color 	 : darkgray;
+/*    -fx-alignment        : center;*/
+}
+
+.choice-box{
+    -fx-mark-color       : wheat;
+}
+
+#rightGridPane > .spinner > .radio-button{
+	-fx-text-fill		 : wheat;
+	-fx-prompt-text-fill : lightGray;
+	-fx-background-color : rgba(0, 0, 0, .5);
+	-fx-border-color 	 : darkgray;
+    -fx-opacity          : 1.0;
+}
+
+#vBoxCenter{
+    -fx-background-color : rgba(255, 255, 255, 0.5);
+	-fx-pref-width		 : 700;
+    -fx-alignment: center;
+}
+
+#mainPane{
+/*    -fx-background-color : rgba( 192, 192, 192, 1);*/
+
+    -fx-background-image: url("images/train_station_bg.jpg");
+    -fx-background-size: cover;
+}
+
+.hbox-custom {
+	-fx-font-weight: bold;
+	-fx-alignment        :center_left;
+}
+
+.menu-item .label {
+    -fx-text-fill: white;
+}
+
+.node .date-picker-skin .label{
+	-fx-font-weight: normal;
+}
+
+
+.menu-bar, .context-menu, .menu-item:focused, .menu:focused,
+.menu-bar:selected, .menu:selected
+{
+	-fx-background-color : rgba(0, 0, 0, 0.25);
+}
+
+.menu{
+    -fx-background-color: rgba(0, 0, 0, 0);
+}
+
+
+.menu > .label{
+	-fx-text-fill	 	 : white;
+}
+
+.title{
+	-fx-background-color : black;
+	-fx-text-fill	 	 : #D8D8D8;
+}
+
+.check-box *.box
+{
+	-fx-background-radius: 0, 0, 0, 0;
+    -fx-effect: dropshadow( one-pass-box , black, 0, 2.0 , 3.5, 3.5);
+}    
+
+.hbox-custom .button{
+/*	-fx-text-fill		 : #FFFFFF;*/
+	-fx-pref-width		 : 80	;
+	-fx-background-color : transparent; 
+	-fx-border-color 	 : black; 
+	-fx-background-radius: 0, 0, 0, 0;
+	
+}
+
+.createButton{
+	-fx-text-fill		 : #FFFFFF;
+	-fx-background-color : firebrick; 
+	-fx-border-color 	 : firebrick; 
+	-fx-background-radius: 0, 0, 0, 0;
+	
+}
+
+.guideText{
+	-fx-font-style		 : italic;
+	-fx-font-size		 : 13;
+	-fx-text-fill		 : wheat;
+}
+
+.border-pane{
+	-fx-padding		 	 : 0 0 1000 0;
+}
+
+.table-view .column-header-background {
+    -fx-background-color: transparent;
+}
+
+.table-view .column-header, .table-view .filler {
+    -fx-background-color: transparent;
+    -fx-alignment: center;
+}
+
+.table-view .table-row-cell{
+    -fx-alignment: center;
+}
+
