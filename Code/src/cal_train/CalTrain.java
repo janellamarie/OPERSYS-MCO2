@@ -15,19 +15,24 @@ public class CalTrain implements Runnable {
 	private Condition train_arrival = station_lock.newCondition();
 	private Condition train_leave =  station_lock.newCondition();
 	ArrayList<Station> stations = new ArrayList<Station>();
-	public static ArrayList trains = new ArrayList<Thread>();
+
+	private static ArrayList<Thread> trains = new ArrayList<Thread>();
 
 
 	public void start() throws InterruptedException {
 		station_init();
         System.out.println("STARTING THREAD");
 
-        int trainlimit = 1;
+        int trainlimit = 2;
 
+        for (int i = 0; i < trainlimit; i++){
+        	Thread train = new Thread(new Train(i+1, 10, stations));
+        	trains.add(train);
+		}
 
 
 		for(int i = 0; i < stations.size(); i++){
-			for(int j = 0; j < 5; j++){
+			for(int j = 0; j < 15; j++){
 				Passengers pass = new Passengers(stations.get(i), 5);
 				pass.start();
 				stations.get(i).addPassengers(pass);
@@ -38,12 +43,18 @@ public class CalTrain implements Runnable {
 			System.out.println("Station " + stations.get(i).getStation_number() + " has " + stations.get(i).getWaiting_passengers().size());
 		}
 
-			for (int i = 0 ; i < trainlimit; i++){
-				Thread train = new Thread(new Train(i+1, 15, stations));
-				train.start();
-				trains.add(train);
-				Thread.sleep(1000);
-			}
+		for(int i  = 0; i < trains.size(); i++){
+			trains.get(i).start();
+			//Thread.sleep(1000);
+		}
+
+
+//			for (int i = 0 ; i < trainlimit; i++){
+//				Thread train = new Thread(new Train(i+1, 15, stations));
+//				train.start();
+//				trains.add(train);
+//				Thread.sleep(1000);
+//			}
 
 
 	}

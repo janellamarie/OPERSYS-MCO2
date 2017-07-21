@@ -17,6 +17,8 @@ public class Station extends Thread{
 	int time;
 	CalTrain calTrain;
 
+
+	private Lock lock = new ReentrantLock();
 	private Lock station_lock = new ReentrantLock();
 	private Condition passenger_arrival = station_lock.newCondition();
 	private Condition train_leave = station_lock.newCondition();
@@ -101,13 +103,15 @@ public class Station extends Thread{
 		this.waiting_passengers = waiting_passengers;
 	}
 
-	public void getOffPassengers(){
+	public void getOffPassengers() throws InterruptedException {
+		System.out.println("There are " + curr_train.getPassengers().size() + " Passengers in Train " + curr_train.getTrain_number());
 
-		for (int i = 0; i < curr_train.getPassengers().size(); i++) {
-			if (getStation_number() == curr_train.getPassengers().get(i).getDestination()) {
+		for (int i = curr_train.getPassengers().size()-1; i >= 0; i--) {
+			if (getStation_number() == curr_train.getPassengers().get(i).getDestination()){
+				System.out.println("PASSENGERS OFF in station " + getStation_number() + " headed to " + curr_train.getPassengers().get(i).getDestination());
 				curr_train.removePassengers(i);
-				System.out.println("PASSENGERS OFF");
 			}
+			//System.out.println(i);
 		}
 
 	}
@@ -135,7 +139,7 @@ public class Station extends Thread{
 
 	//This is the robot (I THINK HAHAHA)
 	public void train_arrived(Train train) throws InterruptedException {
-
+		lock.lock();
 		station_lock.lock();
 		try {
 			System.out.println("Train " + train.getTrain_number() + " has arrived in Station " + station_number + " - " +getCurrTime());
@@ -148,7 +152,7 @@ public class Station extends Thread{
 				calTrain.station_load_train(this, curr_train.getVacantSeats());
 
 				System.out.println("# of passengers ing Station " + getStation_number() + ": " + passengers_waiting);
-				Thread.sleep(1000);
+			//	Thread.sleep(1000);
 				if (passengers_waiting > 0 && train.getVacantSeats() > 0) {
 					System.out.println("waiting");
 					train_leave.await();
@@ -159,9 +163,10 @@ public class Station extends Thread{
 		} finally {
 			this.curr_train = null;
 			station_lock.unlock();
+			lock.unlock();
 		}
 
-		Thread.sleep(1000);
+		//Thread.sleep(1000);
 
 	}
 
@@ -171,7 +176,7 @@ public class Station extends Thread{
 			passenger_arrival.await();
 			//System.out.println("Train arrived " + getCurr_train().getTrain_number());
             getInPassengers(pass);
-			Thread.sleep(1000);
+			//Thread.sleep(1000);
 			train_leave.signalAll();
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
