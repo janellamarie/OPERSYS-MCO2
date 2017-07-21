@@ -25,6 +25,8 @@ public class Driver extends Application {
 
 	public static Station stations[];
 	public static Train trains[];
+	
+	public static CalTrain threads[];
 
 	public static Semaphore semaphore;
 	public static Semaphore mutex;
@@ -35,19 +37,43 @@ public class Driver extends Application {
 
 	private BorderPane mainPane;
 	private TextField peopleTextField,
-			  trainTextField;
+			  		  trainTextField;
 
 	public static void main(String[] args){
+		
+		/** INITIALIZE GLOBAL VARIABLES **/
+		
 		stations = new Station[8];
 		trains = new Train[15];
+		threads = new CalTrain[8];
+		
+		semaphore = new Semaphore(8); // max 8 stations
+		mutex = new Semaphore(1); 	  // mutual exclusion for threads
+		
+//		for(int i = 0; i < 8; i++){
+//			threads[i] = new CalTrain();
+//			threads[i].start();
+//		}
 
-		semaphore = new Semaphore(0);
-		mutex = new Semaphore(1);
+		trains[0] = new Train(1,1);
+		trains[1] = new Train(2,1);
+		
+		threads[0] = new CalTrain();
+		threads[1] = new CalTrain();
+		
+		/** START THREADS **/
 
-		CalTrain calTrain = new CalTrain();
-		calTrain.start();
+		threads[0].start();
+		threads[1].start();		
+		
+		threads[0].run();
+		threads[1].run();
 
-		launch(args);
+		
+		System.out.println("AFTER EXECUTING ALL THREADS: " + semaphore);
+	
+		
+//		launch(args);
 	}
 
 	@Override

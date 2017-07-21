@@ -2,16 +2,16 @@ package cal_train;
 
 public class CalTrain implements Runnable {
 	
-	/** Local Variables **/
 	private Station station;
 	
 	public void start(){
-		System.out.println("STARTING THREAD");
+		System.out.println("STARTING THREAD\n");
 		station_init();
 	}
 	
 	public void run(){
-		System.out.println("RUNNING THREAD");
+		System.out.println("RUNNING THREAD " + station.getStation_number() + "\n");
+		station_wait_for_train(this.station);
 	}
 	
 	public void station_init(){
@@ -26,13 +26,9 @@ public class CalTrain implements Runnable {
 			if(Driver.stations[i] == null){
 				station = new Station(i+1);
 				Driver.stations[i] = station;
-				System.out.println("SUCCESSFULLY INITIALIZED STATION");
+				System.out.println("SUCCESSFULLY INITIALIZED STATION " + station.getStation_number() + "\n");
 				break;
-			} else {
-				System.out.println("ERROR INITIALIZING STATION");
-				 break;
 			}
-			
 	}
 
 	public void station_load_train(Station station, int count){
@@ -45,8 +41,11 @@ public class CalTrain implements Runnable {
 		 * input parameter 
 		 */
 
-		station.createTrain(count);
-		System.out.println("Successfully created Train with " + count + " available seats.");
+//		station.setCurrentTrain(station.createTrain(count));
+		
+		System.out.println("STATION LOAD TRAIN");
+		station.setCurrentTrain(Driver.trains[0]);
+//		System.out.println(station.getCurrentTrain().getTrain_number());
 	} 
 	
 	public void station_wait_for_train(Station station){
@@ -55,8 +54,28 @@ public class CalTrain implements Runnable {
 		 * 1. pag dumating si passenger eto yung tatawagin
 		 */
 		
-		System.out.println("Waiting for Train");
-		Driver.station_lock.lock();
+		System.out.println("WAITING FOR TRAIN");
+		this.station_load_train(this.station, 1);
+		
+		try {
+			
+			while(!Driver.mutex.tryAcquire()){
+				/* DO NOTHING UNTIL MERON PANG NASA CRITICAL SECTION
+				 * , WAIT UNTIL OTHER THREAD EXITS CRITICAL SECTION */
+				
+//				System.out.println("THREAD IS WAITING");
+			}
+			
+			if(!Driver.semaphore.tryAcquire()) // try to acquire semaphore
+				System.out.println("\nALL STATIONS ARE BUSY\n" );
+			
+			System.out.println("THREAD " + this.station.getStation_number() + " ACQUIRED MUTEX \n");
+			
+			this.station_on_board(this.station);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public void station_on_board(Station station){
@@ -64,7 +83,48 @@ public class CalTrain implements Runnable {
 		/* NOTES: 
 		 * 1. called pag naka-board na si passenger
 		 */		
-
+		
+		/** PASSENGER BOARDING **/
+		
+		int trainCounter = station.getCurrentTrain().getTrain_number()-1;
+		
+		if(Driver.trains[trainCounter+1] != null){
+			decVacantSeats(trainCounter);
+			incOccupiedSeats(trainCounter);
+			
+		}
+	
+		/** MOVE TRAINS **/
+	
+		if(Driver.trains[trainCounter].getVacantSeats() == 0){
+			if(trainCounter >= 0 && trainCounter < 15 && Driver.trains[trainCounter] != null){
+				station.setCurrentTrain(Driver.trains[trainCounter]);
+				Driver.stations[station.getStation_number()].setCurrentTrain(Driver.trains[trainCounter]);
+				Driver.stations[station.getStation_number()-1].setCurrentTrain(Driver.trains[trainCounter+1]);
+				System.out.println("TRAIN " + (trainCounter) + " LEFT STATION");
+			}
+		}
+		
+		System.out.println("CURRENT STATION'S TRAIN : " + Driver.stations[0].getCurrentTrain().getTrain_number());
+		System.out.println("NEXT STATION'S TRAIN : " + Driver.stations[1].getCurrentTrain().getTrain_number());
+		System.out.println("THREAD " + this.station.getStation_number() + " RELEASED MUTEX \n");
+		
+		Driver.mutex.release();
+	
+	}
+	
+	public void decVacantSeats(int trainCounter){
+		int temp = Driver.trains[trainCounter].getVacantSeats();
+		temp--;
+		System.out.println("DECREMENTED VACANT SEATS: " + temp);
+		Driver.trains[trainCounter].setVacantSeats(temp);
+	}
+	
+	public void incOccupiedSeats(int trainCounter){
+		int temp = Driver.trains[trainCounter].getOccupiedSeats();
+		temp++;
+		System.out.println("INCREMENTED OCCUPIED SEATS: " + temp + "\n");
+		Driver.trains[trainCounter].setOccupiedSeats(temp);
 	}
 	
 	/* USING LOCKS/MONITORS:
@@ -82,7 +142,6 @@ public class CalTrain implements Runnable {
 	 *  4. must not result in busy waiting
 	 */
 	
-
 	public Station getStation() {
 		return station;
 	}
