@@ -5,9 +5,9 @@ package cal_train;
  */
 public class Passengers extends Thread{
     private Station curr_station;
-    private int destination;
+    private Station destination;
 
-    public Passengers(Station curr_station, int destination){
+    public Passengers(Station curr_station, Station destination){
         this.curr_station = curr_station;
         this.destination = destination;
     }
@@ -20,11 +20,11 @@ public class Passengers extends Thread{
         this.curr_station = curr_station;
     }
 
-    public int getDestination() {
+    public Station getDestination() {
         return destination;
     }
 
-    public void setDestination(int destination) {
+    public void setDestination(Station destination) {
         this.destination = destination;
     }
 
