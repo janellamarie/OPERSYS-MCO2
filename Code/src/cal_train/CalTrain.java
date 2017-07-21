@@ -1,13 +1,62 @@
 package cal_train;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
 public class CalTrain implements Runnable {
 	
 	/** Local Variables **/
 	private Station station;
-	
-	public void start(){
-		System.out.println("STARTING THREAD");
+	private Lock station_lock = new ReentrantLock();
+	private Condition train_arrival = station_lock.newCondition();
+	private Condition train_leave =  station_lock.newCondition();
+	ArrayList<Station> stations = new ArrayList<Station>();
+
+	private static ArrayList<Thread> trains = new ArrayList<Thread>();
+
+
+	public void start() throws InterruptedException {
 		station_init();
+        System.out.println("STARTING THREAD");
+
+        int trainlimit = 2;
+
+        for (int i = 0; i < trainlimit; i++){
+        	Thread train = new Thread(new Train(i+1, 10, stations));
+        	trains.add(train);
+		}
+
+
+		for(int i = 0; i < stations.size(); i++){
+			for(int j = 0; j < 15; j++){
+				Passengers pass = new Passengers(stations.get(i), 5);
+				pass.start();
+				stations.get(i).addPassengers(pass);
+			}
+		}
+
+		for(int i = 0; i < stations.size(); i++){
+			System.out.println("Station " + stations.get(i).getStation_number() + " has " + stations.get(i).getWaiting_passengers().size());
+		}
+
+		for(int i  = 0; i < trains.size(); i++){
+			trains.get(i).start();
+			//Thread.sleep(1000);
+		}
+
+
+//			for (int i = 0 ; i < trainlimit; i++){
+//				Thread train = new Thread(new Train(i+1, 15, stations));
+//				train.start();
+//				trains.add(train);
+//				Thread.sleep(1000);
+//			}
+
+
 	}
 	
 	public void run(){
@@ -15,73 +64,79 @@ public class CalTrain implements Runnable {
 	}
 	
 	public void station_init(){
-		
-		/* NOTES: 
+
+		/* NOTES:
 		 * 1. used to invoke station object
 		 * 2. 8 stations lang
 		 * 3. 15 trains all in all
 		 */
-		
-		for(int i = 0; i < 8; i++)	
-			if(Driver.stations[i] == null){
-				station = new Station(i+1);
-				Driver.stations[i] = station;
-				System.out.println("SUCCESSFULLY INITIALIZED STATION");
-				break;
-			} else {
-				System.out.println("ERROR INITIALIZING STATION");
-				 break;
-			}
-			
+
+
+		//Initialize Stations
+		for(int i = 0; i < 8; i++){
+			Station station = new Station(i+1, this);
+
+
+//			for(int j = 0; j < 5; j++){
+//				Passengers pass = new Passengers(station, 5);
+//			}
+			//created new caltrains
+			station.start();
+			stations.add(station);
+		}
 	}
 
 	public void station_load_train(Station station, int count){
 		
-		/* NOTES: 
+		/* NOTES:
 		 * 1. count - how many seats are available on the train
 		 * 2. either puno na yung train or lahat ng naghihintay na passenger
 		 * nakasakay na bago mag end yung funtion
 		 * 3. number of seats may vary among trains and should be treated as
-		 * input parameter 
+		 * input parameter
 		 */
-
-		station.createTrain(count);
-		System.out.println("Successfully created Train with " + count + " available seats.");
+		System.out.println("There are " + station.getCurr_train().getVacantSeats() + " in Train " + station.getCurr_train().getTrain_number());
 	} 
 	
-	public void station_wait_for_train(Station station){
-		
-		/* NOTES:
-		 * 1. pag dumating si passenger eto yung tatawagin
-		 */
-		
-		System.out.println("Waiting for Train");
-		Driver.station_lock.lock();
+	public void station_wait_for_train(Station station) throws InterruptedException {
+//		station_lock.lock();
+//		try{
+//			train_arrival.await();
+//			System.out.println("Train " + station.getCurr_train().getTrain_number() + " has arrived in station " + station.getStation_number());
+//
+//			station
+//
+//		}catch (InterruptedException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} catch(NullPointerException n){
+//		}finally {
+//			station_lock.unlock();
+//		}
 	}
 	
 	public void station_on_board(Station station){
 		
-		/* NOTES: 
+		/* NOTES:
 		 * 1. called pag naka-board na si passenger
-		 */		
+		 */
 
 	}
-	
-	/* USING LOCKS/MONITORS:
-	 *  1. lock_init (struct lock* lock)
-	 *  2. lock_release(struct lock *lock) 
-	 *  3. cond_init(struct condition *cond) 
-	 *  4. cond_wait(struct condition *cond, struct lock *lock) 
-	 *  5. cond_signal(struct condition *cond, struct lock *lock) 
-	 *  6. cond_broadcast(struct condition *cond, struct lock *lock)
-	 *  
-	 *  SOME ASSUMPTIONS:
-	 *  1. there is never more that one train in the station
-	 *  2. any passenger can get-on and get-off in any station
-	 *  3. allow multiple passengers to board simultaneously
-	 *  4. must not result in busy waiting
-	 */
-	
+
+
+	public void getCurrTime(){
+		Calendar cal = Calendar.getInstance();
+		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+		System.out.println( sdf.format(cal.getTime()) );
+	}
+
+	public ArrayList<Station> getStations() {
+		return stations;
+	}
+
+	public void setStations(ArrayList<Station> stations) {
+		this.stations = stations;
+	}
 
 	public Station getStation() {
 		return station;
