@@ -45,8 +45,7 @@ public class Station{
 			
 			System.out.println("\nTrain " + train.getTrain_number() + " has arrived in Station # " + station_number);
 
-			if(station_number < 8){
-				System.out.println("WHAT: " + train.getTrain_number());
+			if(station_number <= 7){
 				setCurrentTrain(train);
 				currentTrain.setCurrentStation(this);
 				currentTrain.setNextStation(CalTrain.stations[station_number]);
@@ -79,6 +78,7 @@ public class Station{
 			e.printStackTrace();
 		}
 		
+		CalTrain.mutex.release();
 		stationSemaphore.release();
 	}
 	

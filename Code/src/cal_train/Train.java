@@ -53,7 +53,7 @@ public class Train implements Runnable{
 		System.out.println("MOVING TRAIN # " + train_number);
 			
 		while(!CalTrain.mutex.tryAcquire()){
-			
+//			System.out.println("WAIT");
 		}
 		
 		System.out.println("--> Train acquired mutex");
@@ -65,7 +65,7 @@ public class Train implements Runnable{
 			
 			System.out.println("NEW NEXT STATION: " + stations[temp+1].getStation_number());
 			nextStation = stations[temp+1];
-		} else {
+		} else if(currentStation.getStation_number() == 7){
 			int temp = currentStation.getStation_number();
 			System.out.println("NEW CURRENT STATION: " + stations[temp].getStation_number());
 			currentStation = stations[temp];
