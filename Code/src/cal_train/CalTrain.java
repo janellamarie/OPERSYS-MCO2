@@ -33,7 +33,7 @@ public class CalTrain implements Runnable {
 
 		for(int i = 0; i < stations.size(); i++){
 			for(int j = 0; j < 15; j++){
-				Passengers pass = new Passengers(stations.get(i), 5);
+				Passengers pass = new Passengers(stations.get(i), stations.get(4));
 				pass.start();
 				stations.get(i).addPassengers(pass);
 			}
@@ -44,6 +44,7 @@ public class CalTrain implements Runnable {
 		}
 
 		for(int i  = 0; i < trains.size(); i++){
+
 			trains.get(i).start();
 			//Thread.sleep(1000);
 		}
@@ -95,7 +96,7 @@ public class CalTrain implements Runnable {
 		 * 3. number of seats may vary among trains and should be treated as
 		 * input parameter
 		 */
-		System.out.println("There are " + station.getCurr_train().getVacantSeats() + " in Train " + station.getCurr_train().getTrain_number());
+		//System.out.println("There are " + station.getCurr_train().getVacantSeats() + " in Train " + station.getCurr_train().getTrain_number());
 	} 
 	
 	public void station_wait_for_train(Station station) throws InterruptedException {

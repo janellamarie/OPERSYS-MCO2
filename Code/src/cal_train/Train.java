@@ -87,7 +87,7 @@ public class Train implements Runnable{
 
 	@Override
 	public void run() {
-		while(true) {
+		//while(true) {
 			for (int i = 1; i <= stations.size(); i++) {
 				try {
 					stations.get(i - 1).train_arrived(this);
@@ -95,6 +95,6 @@ public class Train implements Runnable{
 					e.printStackTrace();
 				}
 			}
-		}
+		//}
 	}
 }

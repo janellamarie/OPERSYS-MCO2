@@ -104,16 +104,16 @@ public class Station extends Thread{
 	}
 
 	public void getOffPassengers() throws InterruptedException {
-		System.out.println("There are " + curr_train.getPassengers().size() + " Passengers in Train " + curr_train.getTrain_number());
+		System.out.println("There were " + curr_train.getPassengers().size() + " Passengers in Train " + curr_train.getTrain_number());
 
 		for (int i = curr_train.getPassengers().size()-1; i >= 0; i--) {
-			if (getStation_number() == curr_train.getPassengers().get(i).getDestination()){
-				System.out.println("PASSENGERS OFF in station " + getStation_number() + " headed to " + curr_train.getPassengers().get(i).getDestination());
+			if (getStation_number() == curr_train.getPassengers().get(i).getDestination().getStation_number()){
+				System.out.println("PASSENGERS OFF in station " + getStation_number() + " headed to " + curr_train.getPassengers().get(i).getDestination().getStation_number());
 				curr_train.removePassengers(i);
 			}
 			//System.out.println(i);
 		}
-
+		System.out.println("There are now " + curr_train.getPassengers().size() + " Passengers in Train " + curr_train.getTrain_number());
 	}
 
 
@@ -165,8 +165,6 @@ public class Station extends Thread{
 			station_lock.unlock();
 			lock.unlock();
 		}
-
-		//Thread.sleep(1000);
 
 	}
 
