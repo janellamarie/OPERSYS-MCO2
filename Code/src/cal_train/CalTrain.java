@@ -8,46 +8,46 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class CalTrain implements Runnable {
-	
-	/** Local Variables **/
-	private Station station;
-	private Lock station_lock = new ReentrantLock();
-	private Condition train_arrival = station_lock.newCondition();
-	private Condition train_leave =  station_lock.newCondition();
-	ArrayList<Station> stations = new ArrayList<Station>();
 
-	private static ArrayList<Thread> trains = new ArrayList<Thread>();
+    /** Local Variables **/
+    private Station station;
+    private Lock station_lock = new ReentrantLock();
+    private Condition train_arrival = station_lock.newCondition();
+    private Condition train_leave =  station_lock.newCondition();
+    ArrayList<Station> stations = new ArrayList<Station>();
+
+    private static ArrayList<Thread> trains = new ArrayList<Thread>();
 
 
-	public void start() throws InterruptedException {
-		station_init();
+    public void start() throws InterruptedException {
+        station_init();
         System.out.println("STARTING THREAD");
 
         int trainlimit = 2;
 
         for (int i = 0; i < trainlimit; i++){
-        	Thread train = new Thread(new Train(i+1, 10, stations));
-        	trains.add(train);
-		}
+            Thread train = new Thread(new Train(i+1, 10, stations));
+            trains.add(train);
+        }
 
 
-		for(int i = 0; i < stations.size(); i++){
-			for(int j = 0; j < 15; j++){
-				Passengers pass = new Passengers(stations.get(i), stations.get(4));
-				pass.start();
-				stations.get(i).addPassengers(pass);
-			}
-		}
+        for(int i = 0; i < stations.size(); i++){
+            for(int j = 0; j < 15; j++){
+                Passenger pass = new Passenger(stations.get(i), stations.get(4));
+                pass.start();
+                stations.get(i).addPassenger(pass);
+            }
+        }
 
-		for(int i = 0; i < stations.size(); i++){
-			System.out.println("Station " + stations.get(i).getStation_number() + " has " + stations.get(i).getWaiting_passengers().size());
-		}
+        for(int i = 0; i < stations.size(); i++){
+            System.out.println("Station " + stations.get(i).getStation_number() + " has " + stations.get(i).getWaiting_passengers().size());
+        }
 
-		for(int i  = 0; i < trains.size(); i++){
+        for(int i  = 0; i < trains.size(); i++){
 
-			trains.get(i).start();
-			//Thread.sleep(1000);
-		}
+            trains.get(i).start();
+            //Thread.sleep(1000);
+        }
 
 
 //			for (int i = 0 ; i < trainlimit; i++){
@@ -58,13 +58,13 @@ public class CalTrain implements Runnable {
 //			}
 
 
-	}
-	
-	public void run(){
-		System.out.println("RUNNING THREAD");
-	}
-	
-	public void station_init(){
+    }
+
+    public void run(){
+        System.out.println("RUNNING THREAD");
+    }
+
+    public void station_init(){
 
 		/* NOTES:
 		 * 1. used to invoke station object
@@ -73,22 +73,22 @@ public class CalTrain implements Runnable {
 		 */
 
 
-		//Initialize Stations
-		for(int i = 0; i < 8; i++){
-			Station station = new Station(i+1, this);
+        //Initialize Stations
+        for(int i = 0; i < 8; i++){
+            Station station = new Station(i+1, this);
 
 
 //			for(int j = 0; j < 5; j++){
-//				Passengers pass = new Passengers(station, 5);
+//				Passenger pass = new Passenger(station, 5);
 //			}
-			//created new caltrains
-			station.start();
-			stations.add(station);
-		}
-	}
+            //created new caltrains
+            station.start();
+            stations.add(station);
+        }
+    }
 
-	public void station_load_train(Station station, int count){
-		
+    public void station_load_train(Station station, int count){
+
 		/* NOTES:
 		 * 1. count - how many seats are available on the train
 		 * 2. either puno na yung train or lahat ng naghihintay na passenger
@@ -96,10 +96,10 @@ public class CalTrain implements Runnable {
 		 * 3. number of seats may vary among trains and should be treated as
 		 * input parameter
 		 */
-		//System.out.println("There are " + station.getCurr_train().getVacantSeats() + " in Train " + station.getCurr_train().getTrain_number());
-	} 
-	
-	public void station_wait_for_train(Station station) throws InterruptedException {
+        //System.out.println("There are " + station.getCurr_train().getVacantSeats() + " in Train " + station.getCurr_train().getTrain_number());
+    }
+
+    public void station_wait_for_train(Station station) throws InterruptedException {
 //		station_lock.lock();
 //		try{
 //			train_arrival.await();
@@ -114,36 +114,36 @@ public class CalTrain implements Runnable {
 //		}finally {
 //			station_lock.unlock();
 //		}
-	}
-	
-	public void station_on_board(Station station){
-		
+    }
+
+    public void station_on_board(Station station){
+
 		/* NOTES:
 		 * 1. called pag naka-board na si passenger
 		 */
 
-	}
+    }
 
 
-	public void getCurrTime(){
-		Calendar cal = Calendar.getInstance();
-		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
-		System.out.println( sdf.format(cal.getTime()) );
-	}
+    public void getCurrTime(){
+        Calendar cal = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+        System.out.println( sdf.format(cal.getTime()) );
+    }
 
-	public ArrayList<Station> getStations() {
-		return stations;
-	}
+    public ArrayList<Station> getStations() {
+        return stations;
+    }
 
-	public void setStations(ArrayList<Station> stations) {
-		this.stations = stations;
-	}
+    public void setStations(ArrayList<Station> stations) {
+        this.stations = stations;
+    }
 
-	public Station getStation() {
-		return station;
-	}
+    public Station getStation() {
+        return station;
+    }
 
-	public void setStation(Station station) {
-		this.station = station;
-	}
+    public void setStation(Station station) {
+        this.station = station;
+    }
 }
