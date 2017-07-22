@@ -9,8 +9,10 @@ public class Passenger implements Runnable {
 	@Override
 	public void run() {
 		/* run passenger thread */
-		System.out.println("RUNNING PASSENGER THREAD \n");
-		this.station_wait_for_train(current);
+		System.out.println("\nRUNNING PASSENGER THREAD");
+		
+		station_wait_for_train(current);
+	
 	}
 		
 	public Passenger(Station current, Station destination){
@@ -27,18 +29,18 @@ public class Passenger implements Runnable {
 		System.out.println("TOTAL PASSENGERS WAITING IN STATION: " + current.getPassengers().size());
 		try{
 			if(station.getCurrentTrain() != null){
-				CalTrain.mutex.acquire();
-				System.out.println("--> Passenger acquired mutex ");
-				/* CRITICAL SECTION -> passenger is boarding */
-				station_on_board(station);
+				while(!CalTrain.mutex.tryAcquire()){
+					System.out.println("--> Passenger acquired mutex ");
+					/* CRITICAL SECTION -> passenger is boarding */
+					station_on_board(station);
+				}
 			}
 		}catch(Exception e){
 			e.printStackTrace();
 		} finally {
 			System.out.println("--> Passenger released mutex");
 			CalTrain.mutex.release();
-		}
-			
+		}		
 	}
 	
 	public void station_on_board(Station station){

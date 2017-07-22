@@ -38,34 +38,44 @@ public class Train implements Runnable{
 	}
 	
 	public void removePassengers(){
-		for(int i = 0; i < passengers.size(); i++){
-			if(currentStation.getStation_number() == passengers.get(i).getDestination().getStation_number()){
-				passengers.remove(i);
-			}
-		}
+//		for(int i = 0; i < passengers.size(); i++){
+//			if(currentStation.getStation_number() == passengers.get(i).getDestination().getStation_number()){
+//				passengers.remove(i);
+//			}
+//		}
+		
+		passengers.removeAll(passengers);
 		System.out.println("AFTER REMOVING (IN METHOD): " + passengers.size());
 	}
 	
 	public void moveTrains(){
 		
 		System.out.println("MOVING TRAIN # " + train_number);
+			
 		while(!CalTrain.mutex.tryAcquire()){
 			
 		}
 		
 		System.out.println("--> Train acquired mutex");
 		
-		if(currentStation.getStation_number() < 8){
+		if(currentStation.getStation_number() < 7){
 			int temp = currentStation.getStation_number();
-			System.out.println("NEW CURRENT STATION: " + temp);
+			System.out.println("NEW CURRENT STATION: " + stations[temp].getStation_number());
 			currentStation = stations[temp];
 			
-			System.out.println("NEW NEXT STATION: " + (temp+1));
+			System.out.println("NEW NEXT STATION: " + stations[temp+1].getStation_number());
 			nextStation = stations[temp+1];
+		} else {
+			int temp = currentStation.getStation_number();
+			System.out.println("NEW CURRENT STATION: " + stations[temp].getStation_number());
+			currentStation = stations[temp];
+			
+			System.out.println("NEW NEXT STATION: " + stations[0].getStation_number());
+			nextStation = stations[0];
 		}
 		
 		CalTrain.mutex.release();
-		System.out.println("--> Train released mutex\n");
+		System.out.println("--> Train released mutex");
 	}
 	
 	/* SETTERS AND GETTERS */
@@ -116,6 +126,12 @@ public class Train implements Runnable{
 
 	public void setStations(Station[] stations) {
 		this.stations = stations;
+	}
+
+	@Override
+	public String toString() {
+		return "Train [train_number=" + train_number + ", seats=" + seats + ", passengers=" + passengers
+				+ ", nextStation=" + nextStation.getStation_number() + ", currentStation=" + currentStation.getStation_number();
 	}
 	
 	

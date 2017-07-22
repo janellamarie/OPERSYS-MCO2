@@ -57,7 +57,8 @@ public class CalTrain extends Application {
 				
 		for(int i = 0; i < 15; i++){
 			trains[i] = new Thread(new Train((i+1), 1));
-		}
+//			System.out.print (trains[i].toString());
+		}		
 		
 		System.out.println("INITIALIZED TRAINS\n");
 	}
@@ -90,9 +91,7 @@ public class CalTrain extends Application {
 				pass.run();
 				stations[i].addPassenger(pass);
 		}
-		
-		
-		
+				
 		for(int i = 0; i < 15; i++){
 			trains[i].start();
 		}

@@ -14,9 +14,6 @@ public class Station{
 		for(int i = 0; i < passengers.size(); i++){
 			passengers.get(i).run();
 		}
-		
-		if(passengers.size() == 0 || currentTrain.getSeats() == currentTrain.getPassengers().size())
-			currentTrain.moveTrains();
 	}
 	
 	public Station(int station_number){
@@ -24,7 +21,7 @@ public class Station{
 		stationSemaphore = new Semaphore(1);
 		passengers = new ArrayList<Passenger>();
 		
-		System.out.println("RUNNING THREAD  " + station_number);
+//		System.out.println("RUNNING THREAD  " + station_number);
 	}
 	
 	public void addPassenger(Passenger p){
@@ -38,12 +35,18 @@ public class Station{
 		}
 		
 		try{
-		
-			stationSemaphore.acquire();
+			while(!stationSemaphore.tryAcquire()){
+				/* while may nasa station pa */
+			}
+			
+			System.out.println("--> STATION SEMAPHORE ACQUIRED (" + station_number + ") ");
+			
 			currentTrain = train;
-			System.out.println("\nTrain " + train.getTrain_number() + " has arrived in Station # " + station_number + "\n");
+			
+			System.out.println("\nTrain " + train.getTrain_number() + " has arrived in Station # " + station_number);
 
 			if(station_number < 8){
+				System.out.println("WHAT: " + train.getTrain_number());
 				setCurrentTrain(train);
 				currentTrain.setCurrentStation(this);
 				currentTrain.setNextStation(CalTrain.stations[station_number]);
@@ -58,22 +61,25 @@ public class Station{
 
 			for(int i = 0; i < passengers.size(); i++){
 				currentTrain.addPassenger(passengers.get(i));
-				passengers.remove(i);
+//				int x = passengers.size();
+				this.passengers.remove(i);
+//				System.out.println(x + " TO " + passengers.size());
 			}
 
 			System.out.println("AFTER ADDING (TRAIN): " + currentTrain.getPassengers().size());
-			
-			if(passengers.size() == 0 || currentTrain.getPassengers().size() == 0)
-				currentTrain.moveTrains();
 
+			System.out.println("WAITING: " + passengers.size());
 			
-			stationSemaphore.release();
-		
+			if(currentTrain.getSeats() - currentTrain.getPassengers().size() == 0)
+				currentTrain.moveTrains();
+			else if (passengers.size() == 0)
+				currentTrain.moveTrains();
+			
 		} catch (Exception e){
 			e.printStackTrace();
-		} finally {
-			stationSemaphore.release();
 		}
+		
+		stationSemaphore.release();
 	}
 	
 	/* SETTERS AND GETTERS */
@@ -100,5 +106,13 @@ public class Station{
 
 	public void setPassengers(ArrayList<Passenger> passengers) {
 		this.passengers = passengers;
+	}
+
+	public Semaphore getStationSemaphore() {
+		return stationSemaphore;
+	}
+
+	public void setStationSemaphore(Semaphore stationSemaphore) {
+		this.stationSemaphore = stationSemaphore;
 	}
 }
