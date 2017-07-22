@@ -26,6 +26,7 @@ public class Station{
 	
 	public void addPassenger(Passenger p){
 		this.passengers.add(p);
+		p.setCurrent(this);
 	}
 	
 	public void trainArrived(Train train){
@@ -35,10 +36,15 @@ public class Station{
 		}
 		
 		try{
+			
+			while(!CalTrain.semaphore.tryAcquire()){
+				
+			}
+			
 			while(!stationSemaphore.tryAcquire()){
 				/* while may nasa station pa */
 			}
-			
+		
 			System.out.println("--> STATION SEMAPHORE ACQUIRED (" + station_number + ") ");
 			
 			currentTrain = train;
@@ -60,9 +66,7 @@ public class Station{
 
 			for(int i = 0; i < passengers.size(); i++){
 				currentTrain.addPassenger(passengers.get(i));
-//				int x = passengers.size();
 				this.passengers.remove(i);
-//				System.out.println(x + " TO " + passengers.size());
 			}
 
 			System.out.println("AFTER ADDING (TRAIN): " + currentTrain.getPassengers().size());
@@ -78,7 +82,9 @@ public class Station{
 			e.printStackTrace();
 		}
 		
+		currentTrain = null;
 		CalTrain.mutex.release();
+		CalTrain.semaphore.release();
 		stationSemaphore.release();
 	}
 	

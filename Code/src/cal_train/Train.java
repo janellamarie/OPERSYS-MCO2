@@ -19,7 +19,7 @@ public class Train implements Runnable{
 		passengers = new ArrayList<Passenger>();
 		
 		stations = new Station[8];
-		stations = CalTrain.stations.clone();
+		stations = CalTrain.stations;
 	}
 	
 	public Train(int train_number){
@@ -28,8 +28,9 @@ public class Train implements Runnable{
 	
 	@Override
 	public void run() {		
-		for (int i = 0; i < 8; i++) 
+		for (int i = 0; i < 8; i++){
 			stations[i].trainArrived(this);
+		}
 	}	 
 	
 	public void addPassenger(Passenger p){
@@ -38,12 +39,6 @@ public class Train implements Runnable{
 	}
 	
 	public void removePassengers(){
-//		for(int i = 0; i < passengers.size(); i++){
-//			if(currentStation.getStation_number() == passengers.get(i).getDestination().getStation_number()){
-//				passengers.remove(i);
-//			}
-//		}
-		
 		passengers.removeAll(passengers);
 		System.out.println("AFTER REMOVING (IN METHOD): " + passengers.size());
 	}
@@ -51,11 +46,7 @@ public class Train implements Runnable{
 	public void moveTrains(){
 		
 		System.out.println("MOVING TRAIN # " + train_number);
-			
-		while(!CalTrain.mutex.tryAcquire()){
-//			System.out.println("WAIT");
-		}
-		
+					
 		System.out.println("--> Train acquired mutex");
 		
 		if(currentStation.getStation_number() < 7){
@@ -69,9 +60,6 @@ public class Train implements Runnable{
 			int temp = currentStation.getStation_number();
 			System.out.println("NEW CURRENT STATION: " + stations[temp].getStation_number());
 			currentStation = stations[temp];
-			
-			System.out.println("NEW NEXT STATION: " + stations[0].getStation_number());
-			nextStation = stations[0];
 		}
 		
 		CalTrain.mutex.release();

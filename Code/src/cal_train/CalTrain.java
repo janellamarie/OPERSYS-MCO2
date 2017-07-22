@@ -1,5 +1,8 @@
 package cal_train;
 
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.Semaphore;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.geometry.Pos;
@@ -13,10 +16,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import java.util.concurrent.Semaphore;
-import java.util.concurrent.locks.Condition;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 public class CalTrain extends Application {
 
@@ -57,7 +56,6 @@ public class CalTrain extends Application {
 				
 		for(int i = 0; i < 15; i++){
 			trains[i] = new Thread(new Train((i+1), 1));
-//			System.out.print (trains[i].toString());
 		}		
 		
 		System.out.println("INITIALIZED TRAINS\n");
@@ -79,21 +77,18 @@ public class CalTrain extends Application {
 		Passenger pass = null;
 		
 		for(int i = 0; i < 8; i++){
-//			for(int j = 0; j < 15; j++){
-
-				if(i < 6){
-					pass = new Passenger(stations[i], stations[i+1]);
-				}else{
-					pass = new Passenger(stations[i], stations[0]);
-				}	
-//			}
-				
-				pass.run();
-				stations[i].addPassenger(pass);
+			if(i < 7){
+				pass = new Passenger(stations[i], stations[i+1]);
+			}else{
+				pass = new Passenger(stations[i], stations[0]);
+			}	
+			
+			stations[i].addPassenger(pass);
+			pass.run();
 		}
 				
 		for(int i = 0; i < 15; i++){
-			trains[i].start();
+			trains[i].start();	
 		}
 		
 //		launch(args);
