@@ -152,7 +152,7 @@ public class Test extends Application {
         createTrain.setOnAction(e -> {
 
             for(int i = 0; i < nTrainsChoiceBox.getValue(); i++)
-                trains.add(new Train(i + 1, spinner.getValue(), null));
+                trains.add(new Train(i + 1, spinner.getValue()));
 
             if(trains.size() == 15) {
                 semaphoreMenuItem.setDisable(false);
@@ -353,7 +353,7 @@ public class Test extends Application {
 
         for(int i = 0; i < 8; i++){
             Label trainStation = new Label("Station " + (i + 1));
-            stations.add(new Station(i + 1, null));
+            stations.add(new Station(i + 1));
             ImageView stationImageView = new ImageView("images/station.png");
             stationImageView.setFitHeight(100);
             stationImageView.setFitWidth(100);
@@ -370,10 +370,10 @@ public class Test extends Application {
                 Station station = stations.get(trainId);
                 stationTextField.setText("" + station.getStation_number());
 
-                trainTextField.textProperty().bind(Bindings.concat(station.getCurr_train() == null ?
+                trainTextField.textProperty().bind(Bindings.concat(station.getCurrentTrain() == null ?
                         "No Train" : "Train " +
-                        station.getCurr_train().getTrain_number()));
-                if(station.getCurr_train() == null){
+                        station.getCurrentTrain().getTrain_number()));
+                if(station.getCurrentTrain() == null){
                     nPeopleSpinner.setDisable(true);
                     nPeopleSpinner.getValueFactory().setValue(1);
                     destinationChoiceBox.setDisable(true);
@@ -480,6 +480,10 @@ public class Test extends Application {
 
                 seatsTextField.textProperty().bind(Bindings.concat(train.getSeats() - train.getPassengers().size(),
                         "/", train.getSeats(), " Seats"));
+
+                stationTextField.textProperty().bind(Bindings.concat(train.getCurrentStation() == null ?
+                        "Not in a station" : "Station " +
+                        train.getCurrentStation().getStation_number()));
                 destinationChoiceBox.setValue(0);
                 destinationChoiceBox.setDisable(true);
                 System.out.println(((ImageView)e.getSource()).getX() + " " + ((ImageView)e.getSource()).getTranslateX());
