@@ -4,21 +4,17 @@ import javafx.animation.PathTransition;
 import javafx.animation.FadeTransition;
 import javafx.application.Application;
 import javafx.application.Platform;
-<<<<<<< HEAD
-=======
 import javafx.beans.binding.Bindings;
->>>>>>> 432b55420d8691fc003d01141ef8b50b9a8def30
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.scene.shape.Polygon;
+import javafx.scene.shape.Polyline;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -40,21 +36,17 @@ public class Test extends Application {
     public static Condition trainArrival = station_lock.newCondition();
 
     /** GUI **/
+    private boolean semaphoreMachine = true;        //use this to check if the user wants a semaphore machine or lock(?)
 
     private BorderPane mainPane;
-<<<<<<< HEAD
-    private TextField peopleTextField,
-            trainTextField;
-=======
     private TextField  trainTextField,
-                       stationTextField,
-                       seatsTextField;
+            stationTextField,
+            seatsTextField;
 
     private ChoiceBox<Integer> destinationChoiceBox;
     private Spinner<Integer> nPeopleSpinner;
     private MenuItem semaphoreMenuItem,
-                     lockMenuItem;
->>>>>>> 432b55420d8691fc003d01141ef8b50b9a8def30
+            lockMenuItem;
 
     public static void main(String[] args){
         stations = new ArrayList<>();
@@ -82,12 +74,6 @@ public class Test extends Application {
         primaryStage.show();
         primaryStage.setOnCloseRequest(e -> terminateProgram());
 
-<<<<<<< HEAD
-        mainPane.setRight(initRightVBox());
-        mainPane.setCenter(initCenterVBox());
-        mainPane.setAlignment(mainPane.getRight(), Pos.CENTER);
-        mainPane.setAlignment(mainPane.getCenter(), Pos.CENTER);
-=======
         Label headerLabel = new Label("Train Simulation");
         headerLabel.setId("headerLabel");
 
@@ -205,7 +191,7 @@ public class Test extends Application {
 
 
         trainInitGrid.getChildren().addAll(nTrainsLabel, nTrainsChoiceBox,
-                                           nSeats, createTrain, spinner);
+                nSeats, createTrain, spinner);
         //Add button for adding of passengers
         trainInitGrid.setAlignment(Pos.CENTER);
 
@@ -264,7 +250,6 @@ public class Test extends Application {
         });
 
         return menuBar;
->>>>>>> 432b55420d8691fc003d01141ef8b50b9a8def30
     }
 
     public VBox initRightVBox()
@@ -276,8 +261,6 @@ public class Test extends Application {
         gridPane.setId("rightGridPane");
         gridPane.getStyleClass().add("grid-pane");
 
-<<<<<<< HEAD
-=======
         //Station Number
         ImageView stationIcon = new ImageView("images/trainStation.png");
         stationIcon.setFitHeight(25);
@@ -288,7 +271,6 @@ public class Test extends Application {
         stationTextField.setDisable(true);
         stationTextField.setPromptText("Station Number");
 
->>>>>>> 432b55420d8691fc003d01141ef8b50b9a8def30
         //Train Number
         ImageView trainIcon = new ImageView("images/trainSubIcon2.png");
         trainIcon.setFitHeight(25);
@@ -299,11 +281,6 @@ public class Test extends Application {
         trainTextField.setDisable(true);
         trainTextField.setPromptText("Train Number");
 
-<<<<<<< HEAD
-        GridPane.setConstraints(trainIcon, 0, 0);
-        GridPane.setConstraints(trainTextField, 1, 0);
-        gridPane.getChildren().addAll(trainIcon, trainTextField);
-=======
         //Seats for the train
         ImageView seatsIcon = new ImageView("images/seatsIcon.png");
         seatsIcon.setFitHeight(25);
@@ -321,9 +298,8 @@ public class Test extends Application {
         GridPane.setConstraints(seatsIcon, 0, 2);
         GridPane.setConstraints(seatsTextField, 1, 2);
         gridPane.getChildren().addAll(stationIcon, stationTextField,
-                                      trainIcon, trainTextField,
-                                      seatsIcon, seatsTextField);
->>>>>>> 432b55420d8691fc003d01141ef8b50b9a8def30
+                trainIcon, trainTextField,
+                seatsIcon, seatsTextField);
 
         //People
         ImageView peopleIcon = new ImageView("images/peopleIcon2.png");
@@ -331,18 +307,6 @@ public class Test extends Application {
         peopleIcon.setFitWidth(25);
         peopleIcon.setPreserveRatio(true);
 
-<<<<<<< HEAD
-        peopleTextField = new TextField();
-        peopleTextField.setDisable(true);
-        peopleTextField.setPromptText("Number of People");
-        Button button = new Button("^");
-
-        GridPane.setConstraints(peopleIcon, 0, 1);
-        GridPane.setConstraints(peopleTextField, 1, 1);
-        gridPane.getChildren().addAll(peopleTextField);
-        GridPane.setConstraints(button, 2, 1);
-        gridPane.getChildren().addAll(peopleIcon, button);
-=======
         nPeopleSpinner = new Spinner<>(1, Integer.MAX_VALUE, 1, 1);
 
         //Destination
@@ -353,14 +317,13 @@ public class Test extends Application {
         destinationChoiceBox = new ChoiceBox<>();
         destinationChoiceBox.getItems().addAll(0, 1, 2, 3, 4, 5, 6, 7);
 
->>>>>>> 432b55420d8691fc003d01141ef8b50b9a8def30
 
         Button createPassenger = new Button("Create");
         createPassenger.setOnAction(e -> {
             if(destinationChoiceBox.getValue() != null)
                 for(int i = 0; i < nPeopleSpinner.getValue(); i++){
                     Passenger passenger = new Passenger(stations.get(Integer.parseInt(stationTextField.getText()) - 1),
-                                                        stations.get(destinationChoiceBox.getValue() - 1));
+                            stations.get(destinationChoiceBox.getValue() - 1));
                     stations.get(Integer.parseInt(stationTextField.getText()) - 1).addPassenger(passenger);
                 }
         });
@@ -389,31 +352,6 @@ public class Test extends Application {
         field.setId("centerPane");
 
         for(int i = 0; i < 8; i++){
-<<<<<<< HEAD
-            ImageView trainStation = new ImageView("images/station.png");
-            trainStation.setFitHeight(100);
-            trainStation.setFitWidth(100);
-            trainStation.setPreserveRatio(true);
-
-            trainStation.setOnMouseClicked(e -> {
-                System.out.println("WA");
-            });
-
-            trainStation.setLayoutX(150 * (i + 1));
-            trainStation.setLayoutY(0);
-
-            if(i > 2){
-                trainStation.setLayoutX(150 * (i - 3 + 1));
-                trainStation.setLayoutY(300);
-            }
-
-            if(i >= 6){
-                trainStation.setLayoutX(10);
-                trainStation.setLayoutY(150);
-
-                if(i == 7)
-                    trainStation.setLayoutX(600);
-=======
             Label trainStation = new Label("Station " + (i + 1));
             stations.add(new Station(i + 1, null));
             ImageView stationImageView = new ImageView("images/station.png");
@@ -433,8 +371,8 @@ public class Test extends Application {
                 stationTextField.setText("" + station.getStation_number());
 
                 trainTextField.textProperty().bind(Bindings.concat(station.getCurr_train() == null ?
-                                                                    "No Train" : "Train " +
-                                                                                 station.getCurr_train().getTrain_number()));
+                        "No Train" : "Train " +
+                        station.getCurr_train().getTrain_number()));
                 if(station.getCurr_train() == null){
                     nPeopleSpinner.setDisable(true);
                     nPeopleSpinner.getValueFactory().setValue(1);
@@ -464,52 +402,16 @@ public class Test extends Application {
             else if(i < 8){
                 trainStation.setLayoutX(150 * (i - 5 + 1));
                 trainStation.setLayoutY(300);
->>>>>>> 432b55420d8691fc003d01141ef8b50b9a8def30
             }
 
             field.getChildren().add(trainStation);
         }
 
-<<<<<<< HEAD
-
-        Polygon polyline = new Polygon();
-        polyline.getPoints().addAll(
-                0.0, 0.0,
-                600.0, 0.0,
-                0.0,0.0);
-
-
-        for(int i = 0; i < 16; i++){
-=======
         for(int i = 0; i < 15; i++){
->>>>>>> 432b55420d8691fc003d01141ef8b50b9a8def30
             ImageView train1 = new ImageView("images/train2.png");
             train1.setFitHeight(50);
             train1.setFitWidth(50);
 
-<<<<<<< HEAD
-            if(i == 0){ //First Train
-                train1 = new ImageView("images/train1.png");
-                train1.setFitHeight(50);
-                train1.setFitWidth(50);
-                train1.setLayoutX(225);
-                train1.setLayoutY(425);
-            } else if(i < 4){
-                train1.setLayoutX(225 + (75 * i));
-                train1.setLayoutY(425);
-            } else if(i < 8){
-                train1.setLayoutX(225 + (75 * (i - 4)));
-                train1.setLayoutY(450);
-            } else if(i < 12){
-                train1.setLayoutX(225 + (75 * (i - 8)));
-                train1.setLayoutY(475);
-            } else if(i < 16){
-                train1.setLayoutX(225 + (75 * (i - 12)));
-                train1.setLayoutY(500);
-            }
-
-            train1.setRotate(train1.getRotate() + 90);
-=======
             if (i < 4){
                 if(i == 0)
                     train1.setImage(new Image("images/train1.png"));
@@ -529,14 +431,41 @@ public class Test extends Application {
 
 
 
->>>>>>> 432b55420d8691fc003d01141ef8b50b9a8def30
             train1.setPreserveRatio(true);
 
+            Polyline polyline = new Polyline();
+            polyline.setLayoutX(25);
+            polyline.setLayoutY(25);
+            polyline.getPoints().addAll(
+                    train1.getX(), train1.getY(),
+                    600.0 - 40, train1.getY(),
+                    600.0 - 40, 160.0,              //Station Right
+                    475.0, 70.0,                    //Station middle 1 (top)
+                    474.0, 70.0,                    //Station middle 1b (top)     // STOP HERE
+                    325.0, 70.0,                    //Station middle 2 (top)
+                    175.0, 70.0,                    //Station middle 3 (top)
+                    100.0, 160.0,                   //Station left
+                    100.0, 161.0,                   //Station left b              // STOP HERE
+                    175.0, 270.0,                    //Station middle 3 (bottom)
+                    176.0, 270.0,                    //Station middle 3b (bottom) // STOP HERE
+                    325.0, 270.0,                    //Station middle 2 (bottom)
+                    475.0, 270.0,                    //Station middle 1 (bottom)
+                    /*Another loop*/
+                    600.0 - 40, 160.0,              //Station Right
+                    600.0 - 40, 159.0,              //Station Right b             // STOP HERE
+                    475.0, 70.0,                    //Station middle 1 (top)
+                    474.0, 70.0,                    //Station middle 1b (top)     // STOP HERE
+                    325.0, 70.0,                    //Station middle 2 (top)
+                    175.0, 70.0,                    //Station middle 3 (top)
+                    100.0, 160.0,                   //Station left
+                    100.0, 161.0,                   //Station left b              // STOP HERE
+                    100.0, train1.getY(),
+                    train1.getX(), train1.getY());
+
+            if(i % 4 == 0)
+                field.getChildren().add(polyline);
 
             train1.setOnMouseClicked(e -> {
-<<<<<<< HEAD
-                System.out.println(((ImageView)e.getSource()).getLayoutX());
-=======
 
                 nPeopleSpinner.setDisable(true);
                 nPeopleSpinner.getValueFactory().setValue(1);
@@ -550,25 +479,20 @@ public class Test extends Application {
                 trainTextField.setText(String.valueOf(trainId));
 
                 seatsTextField.textProperty().bind(Bindings.concat(train.getSeats() - train.getPassengers().size(),
-                                                                         "/", train.getSeats(), " Seats"));
+                        "/", train.getSeats(), " Seats"));
                 destinationChoiceBox.setValue(0);
                 destinationChoiceBox.setDisable(true);
                 System.out.println(((ImageView)e.getSource()).getX() + " " + ((ImageView)e.getSource()).getTranslateX());
->>>>>>> 432b55420d8691fc003d01141ef8b50b9a8def30
                 PathTransition transition = new PathTransition();
                 transition.setOrientation(PathTransition.OrientationType.ORTHOGONAL_TO_TANGENT);
                 transition.setNode((ImageView)e.getSource());
-                transition.setDuration(Duration.seconds(5));
+                transition.setDuration(Duration.seconds(10));
                 transition.setPath(polyline);
                 transition.setCycleCount(1);
                 transition.play();
             });
 
-<<<<<<< HEAD
-            train1.setId("train"+i);
-=======
             train1.setId("" + (i + 1));
->>>>>>> 432b55420d8691fc003d01141ef8b50b9a8def30
 
             field.getChildren().add(train1);
         }
