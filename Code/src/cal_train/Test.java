@@ -41,7 +41,8 @@ public class Test extends Application {
     private BorderPane mainPane;
     private TextField  trainTextField,
             stationTextField,
-            seatsTextField;
+            seatsTextField,
+            nPeopleTextField;
 
     private ChoiceBox<Integer> destinationChoiceBox;
     private Spinner<Integer> nPeopleSpinner;
@@ -78,7 +79,7 @@ public class Test extends Application {
         headerLabel.setId("headerLabel");
 
 //        initScreen2(true);
-        FadeTransition fadeOut = new FadeTransition(javafx.util.Duration.seconds(2), mainPane);
+        FadeTransition fadeOut = new FadeTransition(javafx.util.Duration.seconds(1), mainPane);
         fadeOut.setToValue(0);
         fadeOut.setCycleCount(1);
         fadeOut.play();
@@ -100,7 +101,6 @@ public class Test extends Application {
 
                     // Update initialization of trains first before going there
                     initScreen1();
-                    System.out.println("ZZZZZZZZZZZZZ");
                     fadeOut.setOnFinished(e4 -> fadeOut.stop());
 
                 });
@@ -281,6 +281,17 @@ public class Test extends Application {
         trainTextField.setDisable(true);
         trainTextField.setPromptText("Train Number");
 
+        //People
+        ImageView peopleIcon = new ImageView("images/peopleIcon2.png");
+        peopleIcon.setFitHeight(25);
+        peopleIcon.setFitWidth(25);
+        peopleIcon.setPreserveRatio(true);
+
+
+        nPeopleTextField = new TextField();
+        nPeopleTextField.setDisable(true);
+        nPeopleTextField.setPromptText("Number of People");
+
         //Seats for the train
         ImageView seatsIcon = new ImageView("images/seatsIcon.png");
         seatsIcon.setFitHeight(25);
@@ -291,21 +302,11 @@ public class Test extends Application {
         seatsTextField.setDisable(true);
         seatsTextField.setPromptText("A/T Seats");
 
-        GridPane.setConstraints(stationIcon, 0, 0);
-        GridPane.setConstraints(stationTextField, 1, 0);
-        GridPane.setConstraints(trainIcon, 0, 1);
-        GridPane.setConstraints(trainTextField, 1, 1);
-        GridPane.setConstraints(seatsIcon, 0, 2);
-        GridPane.setConstraints(seatsTextField, 1, 2);
-        gridPane.getChildren().addAll(stationIcon, stationTextField,
-                trainIcon, trainTextField,
-                seatsIcon, seatsTextField);
-
-        //People
-        ImageView peopleIcon = new ImageView("images/peopleIcon2.png");
-        peopleIcon.setFitHeight(25);
-        peopleIcon.setFitWidth(25);
-        peopleIcon.setPreserveRatio(true);
+        //Add People
+        ImageView addPeopleIcon = new ImageView("images/addPeopleIcon.png");
+        addPeopleIcon.setFitHeight(25);
+        addPeopleIcon.setFitWidth(25);
+        addPeopleIcon.setPreserveRatio(true);
 
         nPeopleSpinner = new Spinner<>(1, Integer.MAX_VALUE, 1, 1);
 
@@ -315,7 +316,7 @@ public class Test extends Application {
         destinationIcon.setFitWidth(25);
         destinationIcon.setPreserveRatio(true);
         destinationChoiceBox = new ChoiceBox<>();
-        destinationChoiceBox.getItems().addAll(0, 1, 2, 3, 4, 5, 6, 7);
+        destinationChoiceBox.getItems().addAll(1, 2, 3, 4, 5, 6, 7, 8);
 
 
         Button createPassenger = new Button("Create");
@@ -324,21 +325,39 @@ public class Test extends Application {
                 for(int i = 0; i < nPeopleSpinner.getValue(); i++){
                     Passenger passenger = new Passenger(stations.get(Integer.parseInt(stationTextField.getText()) - 1),
                             stations.get(destinationChoiceBox.getValue() - 1));
-                    stations.get(Integer.parseInt(stationTextField.getText()) - 1).addPassenger(passenger);
                 }
+
+            destinationChoiceBox.setValue(null);
+            nPeopleSpinner.getValueFactory().setValue(1);
+
         });
 
-        GridPane.setConstraints(peopleIcon, 0, 4);
-        GridPane.setConstraints(nPeopleSpinner, 1, 4);
-        GridPane.setConstraints(destinationIcon, 0, 3);
-        GridPane.setConstraints(destinationChoiceBox, 1, 3);
-        GridPane.setConstraints(createPassenger, 1, 5);
-        gridPane.getChildren().addAll(nPeopleSpinner, peopleIcon, destinationIcon, destinationChoiceBox, createPassenger);
+        nPeopleSpinner.setDisable(true);
+        destinationChoiceBox.setValue(null);
+        destinationChoiceBox.setDisable(true);
+        nPeopleSpinner.getValueFactory().setValue(1);
 
-//        Label headerRight1 = new Label("Station");
-//        Label headerRight2 = new Label("Create Passenger");
-//
-//        GridPane gridPane2 = new GridPane();
+        GridPane.setConstraints(stationIcon         , 0, 0);
+        GridPane.setConstraints(stationTextField    , 1, 0);
+        GridPane.setConstraints(trainIcon           , 0, 1);
+        GridPane.setConstraints(trainTextField      , 1, 1);
+        GridPane.setConstraints(peopleIcon          , 0, 2);
+        GridPane.setConstraints(nPeopleTextField    , 1, 2);
+        GridPane.setConstraints(seatsIcon           , 0, 3);
+        GridPane.setConstraints(seatsTextField      , 1, 3);
+
+        GridPane.setConstraints(addPeopleIcon       , 0, 5);
+        GridPane.setConstraints(nPeopleSpinner      , 1, 5);
+        GridPane.setConstraints(destinationIcon     , 0, 4);
+        GridPane.setConstraints(destinationChoiceBox, 1, 4);
+        GridPane.setConstraints(createPassenger     , 1, 6);
+
+        gridPane.getChildren().addAll(stationIcon   , stationTextField, trainIcon,
+                                      trainTextField, peopleIcon      , nPeopleTextField,
+                                      seatsIcon     , seatsTextField  , nPeopleSpinner,
+                                      addPeopleIcon , destinationIcon , destinationChoiceBox,
+                                      createPassenger);
+
         vBox.getChildren().addAll(gridPane);
         return vBox;
     }
@@ -362,18 +381,37 @@ public class Test extends Application {
             trainStation.setContentDisplay(ContentDisplay.TOP);
             trainStation.setGraphicTextGap(-55);
 //            trainStation.setPadding(new Insets(0, 0, 20, 0));
-            trainStation.setId("" + (i + 1));
+            trainStation.setId(String.valueOf((i + 1)));
 
             trainStation.setOnMouseClicked(e -> {
                 String id = ((Label)e.getSource()).getId();
-                int trainId = Integer.parseInt(String.valueOf(id.charAt(id.length() - 1))) - 1;
-                Station station = stations.get(trainId);
-                stationTextField.setText("" + station.getStation_number());
+                int stationId = Integer.parseInt(String.valueOf(id.charAt(id.length() - 1))) - 1;
+                Station station = stations.get(stationId);
+
+                System.out.println(stationId + " " + station.getPassengers());
+
+                seatsTextField.textProperty().unbind();
+                trainTextField.textProperty().unbind();
+                nPeopleTextField.textProperty().unbind();
+                stationTextField.textProperty().unbind();
+
+                stationTextField.setText(String.valueOf(station.getStation_number()));
+                nPeopleTextField.textProperty().bind(Bindings.concat(station.getPassengers().size() == 0 ?
+                                                                           "No passenger at the station" :
+                                                                           station.getPassengers().size(),
+                                                                           station.getPassengers().size() == 1 ?
+                                                                           " Person " : " People ", "at the station"));
 
                 trainTextField.textProperty().bind(Bindings.concat(station.getCurrentTrain() == null ?
-                        "No Train" : "Train " +
-                        station.getCurrentTrain().getTrain_number()));
-                if(station.getCurrentTrain() == null){
+                                                                          "No train" : "Train " +
+                                                                          station.getCurrentTrain().getTrain_number()));
+
+                seatsTextField.textProperty().bind(Bindings.concat(station.getCurrentTrain() == null ?
+                                                                   "There is no train" :
+                                                                   station.getCurrentTrain().getPassengers() +  "/" +
+                                                                   station.getCurrentTrain().getSeats() + " Seats"));
+
+                if(false){
                     nPeopleSpinner.setDisable(true);
                     nPeopleSpinner.getValueFactory().setValue(1);
                     destinationChoiceBox.setDisable(true);
@@ -467,25 +505,31 @@ public class Test extends Application {
 
             train1.setOnMouseClicked(e -> {
 
+                int trainId = Integer.parseInt(((ImageView)e.getSource()).getId());
+                Train train = trains.get(trainId - 1);
+
+                seatsTextField.textProperty().unbind();
+                trainTextField.textProperty().unbind();
+                nPeopleTextField.textProperty().unbind();
+                stationTextField.textProperty().unbind();
+
                 nPeopleSpinner.setDisable(true);
                 nPeopleSpinner.getValueFactory().setValue(1);
                 destinationChoiceBox.setDisable(true);
                 destinationChoiceBox.setValue(null);
 
-                int trainId = Integer.parseInt(((ImageView)e.getSource()).getId());
-                Train train = trains.get(trainId - 1);
-
-                trainTextField.textProperty().unbind();
                 trainTextField.setText(String.valueOf(trainId));
-
-                seatsTextField.textProperty().bind(Bindings.concat(train.getSeats() - train.getPassengers().size(),
-                        "/", train.getSeats(), " Seats"));
-
+                seatsTextField.textProperty().bind(Bindings.concat(train.getPassengers().size(),
+                                                                         "/", train.getSeats(), " Seats"));
+                nPeopleTextField.textProperty().bind(Bindings.concat(train.getPassengers().size() == 0 ?
+                                                                          "No passenger in the train" :
+                                                                          train.getPassengers().size(),
+                                                                           train.getPassengers().size() == 1 ?
+                                                                           " Person " : " People ", "in the train"));
                 stationTextField.textProperty().bind(Bindings.concat(train.getCurrentStation() == null ?
-                        "Not in a station" : "Station " +
-                        train.getCurrentStation().getStation_number()));
-                destinationChoiceBox.setValue(0);
-                destinationChoiceBox.setDisable(true);
+                                                                        "Not in a station" : "Station " +
+                                                                        train.getCurrentStation().getStation_number()));
+
                 System.out.println(((ImageView)e.getSource()).getX() + " " + ((ImageView)e.getSource()).getTranslateX());
                 PathTransition transition = new PathTransition();
                 transition.setOrientation(PathTransition.OrientationType.ORTHOGONAL_TO_TANGENT);
@@ -496,7 +540,7 @@ public class Test extends Application {
                 transition.play();
             });
 
-            train1.setId("" + (i + 1));
+            train1.setId(String.valueOf((i + 1)));
 
             field.getChildren().add(train1);
         }

@@ -43,7 +43,6 @@ import java.util.concurrent.locks.ReentrantLock;
 		
 		public void addPassenger(Passenger p){
 			this.passengers.add(p);
-			p.setCurrent(this);
 		}
 		
 		public void trainArrived(Train train) throws InterruptedException {
