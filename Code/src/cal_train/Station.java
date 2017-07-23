@@ -13,9 +13,10 @@ import java.util.concurrent.locks.ReentrantLock;
 		
 		private int station_number;
 		private Train currentTrain; 
-			private ArrayList<Passenger> passengers; // waiting passengers
-		
+		private ArrayList<Passenger> passengers; // waiting passengers
+
 		private Semaphore stationSemaphore;
+		private Semaphore guiMoveTrain;
 		
 		private Lock lock = new ReentrantLock();
 		private Lock station_lock = new ReentrantLock();
@@ -34,6 +35,7 @@ import java.util.concurrent.locks.ReentrantLock;
 		public Station(int station_number){
 			this.station_number = station_number;
 			stationSemaphore = new Semaphore(1);
+			guiMoveTrain = new Semaphore(0);
 			passengers = new ArrayList<Passenger>();
 			
 			if(CalTrain.solType)
@@ -44,13 +46,25 @@ import java.util.concurrent.locks.ReentrantLock;
 		public void addPassenger(Passenger p){
 			this.passengers.add(p);
 		}
-		
+
+		public void setGuiMoveTrain(Semaphore guiMoveTrain) {
+			this.guiMoveTrain = guiMoveTrain;
+		}
+
 		public void trainArrived(Train train) throws InterruptedException {
+
+			CalTrain.moveTrain(train.getTrain_number(), station_number);
+
+			while(!guiMoveTrain.tryAcquire()){
+				/* while may nasa station pa */
+			}
+
 			if(CalTrain.solType){
 				trainArrived_locks(train);
 			}else{
 				trainArrived_semaphores(train);
 			}
+
 		}
 	
 	/* METHODS FOR SEMAPHORE SOLUTION */

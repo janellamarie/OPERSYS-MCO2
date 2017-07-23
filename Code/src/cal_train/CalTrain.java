@@ -1,7 +1,7 @@
 package cal_train;
 
-import javafx.animation.PathTransition;
 import javafx.animation.FadeTransition;
+import javafx.animation.PathTransition;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
@@ -15,8 +15,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Polyline;
-import javafx.util.Duration;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 import java.util.ArrayList;
 import java.util.concurrent.Semaphore;
@@ -30,10 +30,9 @@ public class CalTrain extends Application{
 	public static Semaphore semaphore;
 	public static Semaphore mutex;
 	
-	public static boolean solType; // true pag locks, false pag semaphores
 
+	public static boolean solType = true;        //use this to check if the user wants a semaphore machine or lock(?)
 	/** GUI **/
-	private boolean semaphoreMachine = true;        //use this to check if the user wants a semaphore machine or lock(?)
 
 	private BorderPane mainPane;
 	private TextField  trainTextField,
@@ -45,8 +44,9 @@ public class CalTrain extends Application{
 	private Spinner<Integer> nPeopleSpinner;
 	private MenuItem semaphoreMenuItem,
 			lockMenuItem;
+	private static Scene scene;
 
-	
+
 
 //	public void run() {
 //		System.out.println("SOLUTION TYPE: ");
@@ -111,7 +111,7 @@ public class CalTrain extends Application{
 		mainPane = new BorderPane();
 		mainPane.setId("mainPane");
 
-		Scene scene = new Scene(mainPane, 1000, 650);
+		scene = new Scene(mainPane, 1000, 650);
 		primaryStage.setTitle("CaltrainII (OPERSYS MP2)");
 		primaryStage.getIcons().add(new Image("images/trainSubIcon.png"));
 		scene.getStylesheets().add("Style.css");
@@ -242,13 +242,10 @@ public class CalTrain extends Application{
 
 		centerVBox.getChildren().addAll(headerLabel, trainInitGrid, guideLabel);
 		mainPane.setCenter(centerVBox);
-
-
-
 	}
 
 	public void initScreen2(Boolean semaphoreMachine){
-		this.semaphoreMachine = semaphoreMachine;
+		this.solType = semaphoreMachine;
 
 		mainPane.setStyle("-fx-background-image: url(\"images/train_station_bg_2.jpg\");\n" +
 				"-fx-background-size: cover;");
@@ -280,12 +277,12 @@ public class CalTrain extends Application{
 
 
 		semaphoreMenuItem.setOnAction(e -> {
-			semaphoreMachine = true;
+			solType = true;
 			initScreen2(true);
 		});
 
 		lockMenuItem.setOnAction(e -> {
-			semaphoreMachine = false;
+			solType = false;
 			initScreen2(false);
 		});
 
@@ -523,41 +520,43 @@ public class CalTrain extends Application{
 
 			train1.setPreserveRatio(true);
 
-			Polyline polyline = new Polyline();
-			polyline.setLayoutX(25);
-			polyline.setLayoutY(25);
-			polyline.getPoints().addAll(
-					train1.getX(), train1.getY(),
-					600.0 - 40, train1.getY(),
-					600.0 - 40, 160.0,              //Station Right
-					475.0, 70.0,                    //Station middle 1 (top)
-					474.0, 70.0,                    //Station middle 1b (top)     // STOP HERE
-					325.0, 70.0,                    //Station middle 2 (top)
-					175.0, 70.0,                    //Station middle 3 (top)
-					100.0, 160.0,                   //Station left
-					100.0, 161.0,                   //Station left b              // STOP HERE
-					175.0, 270.0,                    //Station middle 3 (bottom)
-					176.0, 270.0,                    //Station middle 3b (bottom) // STOP HERE
-					325.0, 270.0,                    //Station middle 2 (bottom)
-					475.0, 270.0,                    //Station middle 1 (bottom)
+			if(i % 4 == 0 ) {
+				Polyline polyline = new Polyline();
+				polyline.setLayoutX(25);
+				polyline.setLayoutY(25);
+				polyline.getPoints().addAll(
+						train1.getX(), train1.getY(),
+						600.0 - 40, train1.getY(),
+						600.0 - 40, 160.0,              //Station Right
+						475.0, 70.0,                    //Station middle 1 (top)
+						474.0, 70.0,                    //Station middle 1b (top)     // STOP HERE
+						325.0, 70.0,                    //Station middle 2 (top)
+						175.0, 70.0,                    //Station middle 3 (top)
+						100.0, 160.0,                   //Station left
+						100.0, 161.0,                   //Station left b              // STOP HERE
+						175.0, 270.0,                    //Station middle 3 (bottom)
+						176.0, 270.0,                    //Station middle 3b (bottom) // STOP HERE
+						325.0, 270.0,                    //Station middle 2 (bottom)
+						475.0, 270.0,                    //Station middle 1 (bottom)
                     /*Another loop*/
-					600.0 - 40, 160.0,              //Station Right
-					600.0 - 40, 159.0,              //Station Right b             // STOP HERE
-					475.0, 70.0,                    //Station middle 1 (top)
-					474.0, 70.0,                    //Station middle 1b (top)     // STOP HERE
-					325.0, 70.0,                    //Station middle 2 (top)
-					175.0, 70.0,                    //Station middle 3 (top)
-					100.0, 160.0,                   //Station left
-					100.0, 161.0,                   //Station left b              // STOP HERE
-					100.0, train1.getY(),
-					train1.getX(), train1.getY());
+						600.0 - 40, 160.0,              //Station Right
+						600.0 - 40, 159.0,              //Station Right b             // STOP HERE
+						475.0, 70.0,                    //Station middle 1 (top)
+						474.0, 70.0,                    //Station middle 1b (top)     // STOP HERE
+						325.0, 70.0,                    //Station middle 2 (top)
+						175.0, 70.0,                    //Station middle 3 (top)
+						100.0, 160.0,                   //Station left
+						100.0, 161.0,                   //Station left b              // STOP HERE
+						100.0, train1.getY(),
+						train1.getX(), train1.getY());
 
-			if (i % 4 == 0)
 				field.getChildren().add(polyline);
+			}
+
 
 			train1.setOnMouseClicked(e -> {
-
-				int trainId = Integer.parseInt(((ImageView) e.getSource()).getId());
+				String id = ((ImageView) e.getSource()).getId();
+				int trainId = Integer.parseInt(String.valueOf(id.charAt(id.length())));
 				Train train = trains.get(trainId - 1);
 
 				seatsTextField.textProperty().unbind();
@@ -583,16 +582,17 @@ public class CalTrain extends Application{
 								" Person " : " People ", "in the train"));
 
 				System.out.println(((ImageView) e.getSource()).getX() + " " + ((ImageView) e.getSource()).getTranslateX());
-				PathTransition transition = new PathTransition();
-				transition.setOrientation(PathTransition.OrientationType.ORTHOGONAL_TO_TANGENT);
-				transition.setNode((ImageView) e.getSource());
-				transition.setDuration(Duration.seconds(10));
-				transition.setPath(polyline);
-				transition.setCycleCount(1);
-				transition.play();
+//				PathTransition transition = new PathTransition();
+//				transition.setOrientation(PathTransition.OrientationType.ORTHOGONAL_TO_TANGENT);
+//				transition.setNode((ImageView) e.getSource());
+//				transition.setDuration(Duration.seconds(10));
+//				transition.setPath(polyline);
+//				transition.setCycleCount(1);
+//				transition.play();
 			});
 
-			train1.setId(String.valueOf((i + 1)));
+			train1.setId("Train_" + (i + 1));
+			System.out.println(train1.getId());
 			field.getChildren().add(train1);
 
 			trains.get(i).run();
@@ -623,4 +623,84 @@ public class CalTrain extends Application{
 	}
 
 
+	public static void moveTrain(int train_number, int station_number) {
+
+		ImageView train = (ImageView)scene.lookup("#Train_" + train_number);
+
+		System.out.println(train);
+		System.out.println("#Train_" + train_number);
+		System.out.println(" || " + train.getY());
+
+
+		String coordinates = (int)train.getX() + " " + (int)train.getY();
+
+		Polyline polyline = new Polyline();
+		polyline.setLayoutX(25);
+		polyline.setLayoutY(25);
+
+		switch (coordinates){
+			case "560 161": // Station 1
+							polyline.getPoints().addAll(475.0, 160.0,
+														474.0,  70.0);
+			case "474  70": // Station 2
+							polyline.getPoints().addAll(325.0,  70.0);
+
+			case "325  70": // Station 3
+							polyline.getPoints().addAll(175.0,  70.0);
+
+			case "175  70": // Station 4
+							polyline.getPoints().addAll(100.0, 160.0,
+														100.0, 161.0);
+			case "100 161": // Station 5
+							polyline.getPoints().addAll(175.0, 270.0,
+														176.0, 270.0);
+			case "176 270": // Station 7
+							polyline.getPoints().addAll(325.0, 270.0);
+
+			case "325 270": // Station 8
+							polyline.getPoints().addAll(560.0, 160.0,
+														560.0, 159.0);
+
+			default		  :	// Initial
+							polyline.getPoints().addAll(train.getX(), train.getY(),
+														560.0       , train.getY(),
+														560.0		, 161.0);
+		}
+
+//		polyline.getPoints().addAll(
+//				train.getX(), train.getY(),
+//				600.0 - 40, train.getY(),
+//				600.0 - 40, 160.0,              //Station Right
+//				475.0, 70.0,                    //Station middle 1 (top)
+//				474.0, 70.0,                    //Station middle 1b (top)     // STOP HERE
+//				325.0, 70.0,                    //Station middle 2 (top)
+//				175.0, 70.0,                    //Station middle 3 (top)
+//				100.0, 160.0,                   //Station left
+//				100.0, 161.0,                   //Station left b              // STOP HERE
+//				175.0, 270.0,                    //Station middle 3 (bottom)
+//				176.0, 270.0,                    //Station middle 3b (bottom) // STOP HERE
+//				325.0, 270.0,                    //Station middle 2 (bottom)
+//				475.0, 270.0,                    //Station middle 1 (bottom)
+//                    /*Another loop*/
+//				600.0 - 40, 160.0,              //Station Right
+//				600.0 - 40, 159.0,              //Station Right b             // STOP HERE
+//				475.0, 70.0,                    //Station middle 1 (top)
+//				474.0, 70.0,                    //Station middle 1b (top)     // STOP HERE
+//				325.0, 70.0,                    //Station middle 2 (top)
+//				175.0, 70.0,                    //Station middle 3 (top)
+//				100.0, 160.0,                   //Station left
+//				100.0, 161.0,                   //Station left b              // STOP HERE
+//				100.0, train.getY(),
+//				train.getX(), train.getY());
+
+		PathTransition transition = new PathTransition();
+		transition.setOrientation(PathTransition.OrientationType.ORTHOGONAL_TO_TANGENT);
+		transition.setNode(train);
+		transition.setDuration(Duration.seconds(5));
+		transition.setPath(polyline);
+		transition.setCycleCount(1);
+		transition.play();
+
+		transition.setOnFinished(e -> stations.get(station_number).setGuiMoveTrain(new Semaphore(1)));
+	}
 }
