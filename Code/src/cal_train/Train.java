@@ -4,7 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-public class Train implements Runnable{
+public class Train extends Thread implements Runnable{
 
 	private int train_number;	
 	private int seats;
@@ -12,14 +12,13 @@ public class Train implements Runnable{
 	
 	private Station nextStation;
 	private Station currentStation;
-	private Station stations[];
-	
+	private ArrayList<Station> stations;
+
 	public Train(int train_number, int count){
 		seats = count;
 		this.train_number = train_number;
 		passengers = new ArrayList<Passenger>();
 		
-		stations = new Station[8];
 		stations = CalTrain.stations;
 	}
 	
@@ -31,8 +30,8 @@ public class Train implements Runnable{
 	public void run() {		
 		for (int i = 0; i < 8; i++){
 			try {
-				setCurrentStation(stations[i]);
-				stations[i].trainArrived(this);
+				setCurrentStation(stations.get(i));
+				stations.get(i).trainArrived(this);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
@@ -60,15 +59,15 @@ public class Train implements Runnable{
 		
 		if(currentStation.getStation_number() < 7){
 			int temp = currentStation.getStation_number();
-			System.out.println("NEW CURRENT STATION: " + stations[temp].getStation_number());
-			currentStation = stations[temp];
+			System.out.println("NEW CURRENT STATION: " + stations.get(temp).getStation_number());
+			currentStation = stations.get(temp);
 			
-			System.out.println("NEW NEXT STATION: " + stations[temp+1].getStation_number());
-			nextStation = stations[temp+1];
+			System.out.println("NEW NEXT STATION: " + stations.get(temp + 1).getStation_number());
+			nextStation = stations.get(temp + 1);
 		} else if(currentStation.getStation_number() == 7){
 			int temp = currentStation.getStation_number();
-			System.out.println("NEW CURRENT STATION: " + stations[temp].getStation_number());
-			currentStation = stations[temp];
+			System.out.println("NEW CURRENT STATION: " + stations.get(temp).getStation_number());
+			currentStation = stations.get(temp);
 		}
 		
 		CalTrain.mutex.release();
@@ -125,11 +124,11 @@ public class Train implements Runnable{
 		this.currentStation = currentStation;
 	}
 
-	public Station[] getStations() {
+	public ArrayList<Station> getStations() {
 		return stations;
 	}
 
-	public void setStations(Station[] stations) {
+	public void setStations(ArrayList<Station> stations) {
 		this.stations = stations;
 	}
 

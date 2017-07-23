@@ -13,7 +13,7 @@ import java.util.concurrent.locks.ReentrantLock;
 		
 		private int station_number;
 		private Train currentTrain; 
-		private ArrayList<Passenger> passengers; // waiting passengers
+			private ArrayList<Passenger> passengers; // waiting passengers
 		
 		private Semaphore stationSemaphore;
 		
@@ -75,11 +75,11 @@ import java.util.concurrent.locks.ReentrantLock;
 			if(station_number <= 7){
 				setCurrentTrain(train);
 				currentTrain.setCurrentStation(this);
-				currentTrain.setNextStation(CalTrain.stations[station_number]);
+				currentTrain.setNextStation(CalTrain.stations.get(station_number));
 			} else {
 				setCurrentTrain(train);
 				currentTrain.setCurrentStation(this);
-				currentTrain.setNextStation(CalTrain.stations[0]);
+				currentTrain.setNextStation(CalTrain.stations.get(0));
 			}
 
 			System.out.println("IN TRAIN : " + currentTrain.getPassengers().size());
