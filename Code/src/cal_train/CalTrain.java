@@ -625,15 +625,11 @@ public class CalTrain extends Application{
 	}
 
 
-	public static void moveTrain(int train_number, int station_number) {
+	public static void moveTrain(Train train1, int station_number) {
 
-		System.out.println(((VBox)mainPane.getCenter()));
-		System.out.println(((VBox)mainPane.getCenter()).getChildren().size());
-		ImageView train = (ImageView)((VBox)mainPane.getCenter()).getChildren().get(0).lookup("#Train_" + train_number);
+		ImageView train = (ImageView)((VBox)mainPane.getCenter()).getChildren().get(0).lookup("#Train_" +
+																							  train1.getTrain_number());
 
-		System.out.println(train);
-		System.out.println("#Train_" + train_number);
-		System.out.println(" || " + train.getY());
 
 
 		String coordinates = (int)train.getX() + " " + (int)train.getY();
@@ -705,6 +701,7 @@ public class CalTrain extends Application{
 		transition.setCycleCount(1);
 		transition.play();
 
+		transition.setOnFinished(e -> stations.get(station_number).doneTransition(train1));
 
 	}
 }

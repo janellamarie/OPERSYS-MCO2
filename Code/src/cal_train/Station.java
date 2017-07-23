@@ -48,9 +48,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 	public void trainArrived(Train train) {
 
-		CalTrain.moveTrain(train.getTrain_number(), station_number);
-
-		doneTransition(train);
+		CalTrain.moveTrain(train, station_number);
 
 	}
 
