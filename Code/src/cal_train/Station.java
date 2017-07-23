@@ -36,8 +36,14 @@ import java.util.concurrent.locks.ReentrantLock;
 			this.station_number = station_number;
 			stationSemaphore = new Semaphore(1);
 			guiMoveTrain = new Semaphore(1);
-			passengers = new ArrayList<Passenger>();
-			
+			passengers = new ArrayList<>();
+
+			try {
+				guiMoveTrain.acquire();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+
 			if(CalTrain.solType)
 				time = r.nextInt(999);
 			
@@ -61,10 +67,10 @@ import java.util.concurrent.locks.ReentrantLock;
 			}else{
 				trainArrived_semaphores(train);
 			}
-
-			guiMoveTrain.release();
 		}
-	
+
+	public void guiMoveTrainRelease() {guiMoveTrain.release();}
+
 	/* METHODS FOR SEMAPHORE SOLUTION */
 	
 	public void trainArrived_semaphores(Train train){
@@ -294,7 +300,5 @@ import java.util.concurrent.locks.ReentrantLock;
 		this.time = time;
 	}
 
-	public void run(){
 
-	}
 }
