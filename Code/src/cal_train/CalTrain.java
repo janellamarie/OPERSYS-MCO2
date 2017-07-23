@@ -700,8 +700,17 @@ public class CalTrain extends Application{
 		transition.setPath(polyline);
 		transition.setCycleCount(1);
 		transition.play();
+		System.out.println("ZZZZZZZZZZ || " + train1.getTrain_number());
+		try {
+			train1.wait(5);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		transition.setOnFinished(e -> {
 
-		transition.setOnFinished(e -> stations.get(station_number).doneTransition(train1));
+			System.out.println("AJLSKLKAS:LASL<AS:KLAS:KLAS:LK:SALK:KASK: || " + train1.getTrain_number());
+			stations.get(station_number - 1).doneTransition(train1);
+		});
 
 	}
 }

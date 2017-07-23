@@ -27,11 +27,12 @@ public class Train extends Thread implements Runnable{
 	}
 	
 	@Override
-	public void run() {		
-		for (int i = 0; i < 8; i++){
-			setCurrentStation(stations.get(i));
-			stations.get(i).trainArrived(this);
-		}
+	public void run() {
+		while(true)
+			for (int i = 0; i < 8; i++){
+//				setCurrentStation(stations.get(i));
+				stations.get(i).trainArrived(this);
+			}
 	}	 
 	
 	public void addPassenger(Passenger p){

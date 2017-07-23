@@ -53,6 +53,8 @@ import java.util.concurrent.locks.ReentrantLock;
 	}
 
 	public void doneTransition(Train train){
+
+		train.setCurrentStation(this);
 		if(CalTrain.solType){
 			try {
 				trainArrived_locks(train);
