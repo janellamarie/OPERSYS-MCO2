@@ -704,7 +704,9 @@ public class CalTrain extends Application{
 		transition.setPath(polyline);
 		transition.setCycleCount(1);
 		transition.play();
-
-		transition.setOnFinished(e -> stations.get(station_number).setGuiMoveTrain(new Semaphore(1)));
+		System.out.println("AAA");
+		transition.setOnFinished(e -> {
+			System.out.println("BBB");
+		});
 	}
 }
