@@ -705,7 +705,6 @@ public class CalTrain extends Application{
 		transition.setCycleCount(1);
 		transition.play();
 
-		transition.setOnFinished(e -> stations.get(station_number).guiMoveTrainRelease());
 
 	}
 }

@@ -29,12 +29,8 @@ public class Train extends Thread implements Runnable{
 	@Override
 	public void run() {		
 		for (int i = 0; i < 8; i++){
-			try {
-				setCurrentStation(stations.get(i));
-				stations.get(i).trainArrived(this);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
+			setCurrentStation(stations.get(i));
+			stations.get(i).trainArrived(this);
 		}
 	}	 
 	

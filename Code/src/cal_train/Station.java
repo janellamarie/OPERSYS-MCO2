@@ -16,8 +16,7 @@ import java.util.concurrent.locks.ReentrantLock;
 		private ArrayList<Passenger> passengers; // waiting passengers
 
 		private Semaphore stationSemaphore;
-		private Semaphore guiMoveTrain;
-		
+
 		private Lock lock = new ReentrantLock();
 		private Lock station_lock = new ReentrantLock();
 		private Condition passenger_arrival = station_lock.newCondition();
@@ -35,14 +34,7 @@ import java.util.concurrent.locks.ReentrantLock;
 		public Station(int station_number){
 			this.station_number = station_number;
 			stationSemaphore = new Semaphore(1);
-			guiMoveTrain = new Semaphore(1);
 			passengers = new ArrayList<>();
-
-			try {
-				guiMoveTrain.acquire();
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
 
 			if(CalTrain.solType)
 				time = r.nextInt(999);
@@ -54,22 +46,26 @@ import java.util.concurrent.locks.ReentrantLock;
 		}
 
 
-		public void trainArrived(Train train) throws InterruptedException {
+	public void trainArrived(Train train) {
 
-			CalTrain.moveTrain(train.getTrain_number(), station_number);
+		CalTrain.moveTrain(train.getTrain_number(), station_number);
 
-			while(!guiMoveTrain.tryAcquire()){
-				/* while may nasa station pa */
-			}
+		doneTransition(train);
 
-			if(CalTrain.solType){
+	}
+
+	public void doneTransition(Train train){
+		if(CalTrain.solType){
+			try {
 				trainArrived_locks(train);
-			}else{
-				trainArrived_semaphores(train);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
 			}
+		}else{
+			trainArrived_semaphores(train);
 		}
 
-	public void guiMoveTrainRelease() {guiMoveTrain.release();}
+	}
 
 	/* METHODS FOR SEMAPHORE SOLUTION */
 	
