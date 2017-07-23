@@ -321,11 +321,20 @@ public class Test extends Application {
 
         Button createPassenger = new Button("Create");
         createPassenger.setOnAction(e -> {
-            if(destinationChoiceBox.getValue() != null)
-                for(int i = 0; i < nPeopleSpinner.getValue(); i++){
+            if(destinationChoiceBox.getValue() != null) {
+                for (int i = 0; i < nPeopleSpinner.getValue(); i++) {
                     Passenger passenger = new Passenger(stations.get(Integer.parseInt(stationTextField.getText()) - 1),
                             stations.get(destinationChoiceBox.getValue() - 1));
                 }
+
+                Station station = stations.get(Integer.parseInt(stationTextField.getText()) - 1);
+
+                nPeopleTextField.textProperty().bind(Bindings.concat((station.getPassengers().size() == 0 ?
+                        "Nobody is at the station" :
+                        (String.valueOf(station.getPassengers().size()) +
+                                (station.getPassengers().size() == 1 ?
+                                        " Person " : " People " + "at the station")))));
+            }
 
             destinationChoiceBox.setValue(null);
             nPeopleSpinner.getValueFactory().setValue(1);
@@ -396,11 +405,11 @@ public class Test extends Application {
                 stationTextField.textProperty().unbind();
 
                 stationTextField.setText(String.valueOf(station.getStation_number()));
-                nPeopleTextField.textProperty().bind(Bindings.concat(station.getPassengers().size() == 0 ?
-                                                                           "No passenger at the station" :
-                                                                           station.getPassengers().size(),
-                                                                           station.getPassengers().size() == 1 ?
-                                                                           " Person " : " People ", "at the station"));
+                nPeopleTextField.textProperty().bind(Bindings.concat((station.getPassengers().size() == 0 ?
+                                                                     "Nobody is at the station" :
+                                                                     (String.valueOf(station.getPassengers().size()) +
+                                                                     (station.getPassengers().size() == 1 ?
+                                                                     " Person " : " People " + "at the station")))));
 
                 trainTextField.textProperty().bind(Bindings.concat(station.getCurrentTrain() == null ?
                                                                           "No train" : "Train " +
@@ -521,14 +530,14 @@ public class Test extends Application {
                 trainTextField.setText(String.valueOf(trainId));
                 seatsTextField.textProperty().bind(Bindings.concat(train.getPassengers().size(),
                                                                          "/", train.getSeats(), " Seats"));
-                nPeopleTextField.textProperty().bind(Bindings.concat(train.getPassengers().size() == 0 ?
-                                                                          "No passenger in the train" :
-                                                                          train.getPassengers().size(),
-                                                                           train.getPassengers().size() == 1 ?
-                                                                           " Person " : " People ", "in the train"));
                 stationTextField.textProperty().bind(Bindings.concat(train.getCurrentStation() == null ?
                                                                         "Not in a station" : "Station " +
                                                                         train.getCurrentStation().getStation_number()));
+                nPeopleTextField.textProperty().bind(Bindings.concat(train.getPassengers().size() == 0 ?
+                                "Nobody is in the train" :
+                                train.getPassengers().size(),
+                                train.getPassengers().size() == 1 ?
+                                " Person " : " People ", "in the train"));
 
                 System.out.println(((ImageView)e.getSource()).getX() + " " + ((ImageView)e.getSource()).getTranslateX());
                 PathTransition transition = new PathTransition();
