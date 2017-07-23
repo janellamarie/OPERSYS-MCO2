@@ -9,7 +9,7 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class Station extends Thread{
-    
+
     private int station_number;
     private Train curr_train;
 
