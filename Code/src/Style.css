@@ -1,7 +1,7 @@
 
 
 #vBoxRight{
-    -fx-background-color : rgba(98, 78, 64, 0.5);
+    -fx-background-color : rgba(48, 28, 14, 0.5);
 	-fx-pref-width		 : 300;
 	-fx-alignment        : center;
 
@@ -20,6 +20,22 @@
     -fx-alignment        : center;
 }
 
+<<<<<<< HEAD
+
+
+#rightGridPane > .text-field:disabled {
+	-fx-text-fill		 : wheat;
+	-fx-max-width		 : 150;
+	-fx-max-height		 : 25 ;
+	-fx-prompt-text-fill : lightGray;
+	-fx-background-color : rgba(0, 0, 0, 1);
+	-fx-border-color 	 : darkgray;
+    -fx-alignment        : center;
+}
+
+#vBoxCenter{
+    -fx-background-color : rgba(149, 149, 149, 0.53);
+=======
 #rightGridPane > .text-field, #rightGridPane >  .text-field:disabled,
 #rightGridPane > .spinner > .text-field, #rightGridPane >  .spinner /*> .text-field:disabled */,
 #rightGridPane > .choice-box, #rightGridPane > .choice-box:disabled, #rightGridPane > .choice-box > .label,
@@ -79,10 +95,17 @@
 
 .vBoxCenter{
     -fx-background-color : rgba(255, 255, 255, 0.5);
+>>>>>>> 432b55420d8691fc003d01141ef8b50b9a8def30
 	-fx-pref-width		 : 700;
     -fx-alignment        : center;
 }
 
+<<<<<<< HEAD
+#mainPane{
+    -fx-background-image: url("images/train_station_bg.jpg");
+    -fx-background-size: cover;
+}
+=======
 #trainInitialization{
     -fx-background-color  : rgba(148, 128, 114, 0.5);
 	-fx-max-width		  : 500;
@@ -99,6 +122,7 @@
 }
 
 
+>>>>>>> 432b55420d8691fc003d01141ef8b50b9a8def30
 .hbox-custom {
 	-fx-font-weight      : bold;
 	-fx-alignment        : center_left;
@@ -112,20 +136,136 @@
 	-fx-font-weight: normal;
 }
 
+.menu-item:focused {
+     -fx-background-color: darkgray;
+}
 
-.menu-bar, .context-menu, .menu-item:focused, .menu:focused,
-.menu-bar:selected, .menu:selected
+.menu-item:focused .label {
+	-fx-text-fill: white;
+}
+
+.context-menu {
+    -fx-skin: "com.sun.javafx.scene.control.skin.ContextMenuSkin";
+    -fx-background-color: black;
+    -fx-background-insets: 0, 1, 2;
+    -fx-background-radius: 0 6 6 6, 0 5 5 5, 0 4 4 4;
+}
+
+.menu-bar{
+	-fx-background-color : black;
+}
+
+.title{
+	-fx-background-color : black;
+	-fx-text-fill	 	 : #D8D8D8;
+}
+
+.check-box *.box
 {
-	-fx-background-color : rgba(0, 0, 0, 0.25);
+	-fx-background-radius: 0, 0, 0, 0;
+    -fx-effect: dropshadow( one-pass-box , black, 0, 2.0 , 3.5, 3.5);
+}    
+
+.hbox-custom .button{
+/*	-fx-text-fill		 : #FFFFFF;*/
+	-fx-pref-width		 : 80	;
+	-fx-background-color : transparent; 
+	-fx-border-color 	 : black; 
+	-fx-background-radius: 0, 0, 0, 0;
+	
 }
 
-.menu{
-    -fx-background-color: rgba(0, 0, 0, 0);
+.createButton{
+	-fx-text-fill		 : #FFFFFF;
+	-fx-background-color : firebrick; 
+	-fx-border-color 	 : firebrick; 
+	-fx-background-radius: 0, 0, 0, 0;
+	
 }
 
+.guideText{
+	-fx-font-style		 : italic;
+	-fx-font-size		 : 13;
+	-fx-text-fill		 : wheat;
+}
 
-.menu > .label{
-	-fx-text-fill	 	 : white;
+.border-pane{
+	-fx-padding		 	 : 0 0 1000 0;
+}
+
+.table-view{
+
+}
+
+.table-view .column-header-background {
+    -fx-background-color: transparent;
+}
+
+.table-view .column-header, .table-view .filler {
+    -fx-background-color: transparent;
+    -fx-alignment: center;
+}
+
+.table-view .table-row-cell{
+    -fx-alignment: center;
+}
+
+.text-field {
+    -fx-background-color: -fx-shadow-highlight-color, -fx-text-box-border, -fx-control-inner-background;
+    -fx-background-insets: 0, 1, 2;
+    -fx-background-radius: 3, 2, 2;
+    -fx-padding: 0.25em 0.416667em  0.333333em 0.416667em; /* 3 5 4 5 */
+    -fx-text-fill: -fx-text-inner-color;
+    -fx-prompt-text-fill: derive(-fx-control-inner-background,-35%);
+    -fx-cursor: text;
+	-fx-pref-width		 : 250;
+	-fx-pref-height		 : 25 ;
+}
+
+.text-field:focused {
+    -fx-background-color: -fx-focus-color, -fx-text-box-border, -fx-control-inner-background;
+    -fx-background-insets: -0.4, 1, 2;
+    -fx-background-radius: 3.4, 2, 2;
+    -fx-prompt-text-fill: transparent;
+}
+
+/*.root{
+	-fx-background-image: url("lightrain.gif");
+	-fx-font-size		 : 14;
+	
+}
+*/
+
+.hbox-custom {
+	-fx-font-weight: bold;
+	-fx-alignment        :center_left;
+}
+
+.menu-item .label {
+    -fx-text-fill: white;
+}
+
+.node .date-picker-skin .label{
+	-fx-font-weight: normal;
+}
+
+.menu-item:focused {
+     -fx-background-color: darkgray;
+}
+
+.menu-item:focused .label {
+    -fx-text-fill: white;
+}
+
+.context-menu {
+    -fx-skin: "com.sun.javafx.scene.control.skin.ContextMenuSkin";
+    -fx-background-color: black;
+    -fx-background-insets: 0, 1, 2;
+    -fx-background-radius: 0 6 6 6, 0 5 5 5, 0 4 4 4;
+}
+
+.menu-bar{
+	-fx-background-color : black;
 }
 
 .title{
@@ -149,6 +289,10 @@
 }
 
 
+.table-view{
+
+}
+
 .table-view .column-header-background {
     -fx-background-color: transparent;
 }
@@ -160,5 +304,24 @@
 
 .table-view .table-row-cell{
     -fx-alignment: center;
+}
+
+.text-field {
+    -fx-background-color: -fx-shadow-highlight-color, -fx-text-box-border, -fx-control-inner-background;
+    -fx-background-insets: 0, 1, 2;
+    -fx-background-radius: 3, 2, 2;
+    -fx-padding: 0.25em 0.416667em  0.333333em 0.416667em; /* 3 5 4 5 */
+    -fx-text-fill: -fx-text-inner-color;
+    -fx-prompt-text-fill: derive(-fx-control-inner-background,-35%);
+    -fx-cursor: text;
+	-fx-pref-width		 : 250;
+	-fx-pref-height		 : 25 ;
+}
+
+.text-field:focused {
+    -fx-background-color: -fx-focus-color, -fx-text-box-border, -fx-control-inner-background;
+    -fx-background-insets: -0.4, 1, 2;
+    -fx-background-radius: 3.4, 2, 2;
+    -fx-prompt-text-fill: transparent;
 }
 
