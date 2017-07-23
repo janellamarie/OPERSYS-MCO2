@@ -327,13 +327,6 @@ public class Test extends Application {
                             stations.get(destinationChoiceBox.getValue() - 1));
                 }
 
-                Station station = stations.get(Integer.parseInt(stationTextField.getText()) - 1);
-
-                nPeopleTextField.textProperty().bind(Bindings.concat((station.getPassengers().size() == 0 ?
-                        "Nobody is at the station" :
-                        (String.valueOf(station.getPassengers().size()) +
-                                (station.getPassengers().size() == 1 ?
-                                        " Person " : " People " + "at the station")))));
             }
 
             destinationChoiceBox.setValue(null);
