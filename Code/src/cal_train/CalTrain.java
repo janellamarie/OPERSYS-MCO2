@@ -34,7 +34,7 @@ public class CalTrain extends Application{
 	public static boolean solType = true;        //use this to check if the user wants a semaphore machine or lock(?)
 	/** GUI **/
 
-	private BorderPane mainPane;
+	private static BorderPane mainPane;
 	private TextField  trainTextField,
 			stationTextField,
 			seatsTextField,
@@ -252,6 +252,10 @@ public class CalTrain extends Application{
 		mainPane.getChildren().remove(mainPane.getCenter());
 		mainPane.setRight(initRightVBox());
 		mainPane.setCenter(initCenterVBox());
+
+		for(int i = 0; i < 15; i++)
+			trains.get(i).run();
+
 	}
 
 	public MenuBar initTopBar(){
@@ -595,8 +599,6 @@ public class CalTrain extends Application{
 			System.out.println(train1.getId());
 			field.getChildren().add(train1);
 
-			trains.get(i).run();
-
 		}
 			vBox.getChildren().add(field);
 			return vBox;
@@ -625,7 +627,9 @@ public class CalTrain extends Application{
 
 	public static void moveTrain(int train_number, int station_number) {
 
-		ImageView train = (ImageView)scene.lookup("#Train_" + train_number);
+		System.out.println(((VBox)mainPane.getCenter()));
+		System.out.println(((VBox)mainPane.getCenter()).getChildren().size());
+		ImageView train = (ImageView)((VBox)mainPane.getCenter()).getChildren().get(0).lookup("#Train_" + train_number);
 
 		System.out.println(train);
 		System.out.println("#Train_" + train_number);
