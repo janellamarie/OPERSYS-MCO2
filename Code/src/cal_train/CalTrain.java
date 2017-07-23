@@ -624,7 +624,6 @@ public class CalTrain extends Application{
 		launch(args);
 	}
 
-
 	public static void moveTrain(Train train1, int station_number) {
 
 		ImageView train = (ImageView)((VBox)mainPane.getCenter()).getChildren().get(0).lookup("#Train_" +
@@ -700,18 +699,12 @@ public class CalTrain extends Application{
 		transition.setPath(polyline);
 		transition.setCycleCount(1);
 		transition.play();
+
 		System.out.println("ZZZZZZZZZZ || " + train1.getTrain_number());
 
 		transition.setOnFinished(e -> {
-
 			System.out.println("AJLSKLKAS:LASL<AS:KLAS:KLAS:LK:SALK:KASK: || " + train1.getTrain_number());
 			stations.get(station_number - 1).doneTransition(train1);
 		});
-
-		try {
-			train1.wait(5);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
 	}
 }

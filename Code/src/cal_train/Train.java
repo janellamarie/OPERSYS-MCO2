@@ -13,6 +13,7 @@ public class Train extends Thread implements Runnable{
 	private Station nextStation;
 	private Station currentStation;
 	private ArrayList<Station> stations;
+	private boolean guiDone = false;
 
 	public Train(int train_number, int count){
 		seats = count;
@@ -30,6 +31,7 @@ public class Train extends Thread implements Runnable{
 	public void run() {
 		while(true)
 			for (int i = 0; i < 8; i++){
+				System.out.println("WOW");
 				setCurrentStation(stations.get(i));
 				stations.get(i).trainArrived(this);
 			}
@@ -134,5 +136,13 @@ public class Train extends Thread implements Runnable{
 		return "Train [train_number=" + train_number + ", seats=" + seats + ", passengers=" + passengers
 				+ ", nextStation=" + nextStation.getStation_number() + ", currentStation=" + currentStation.getStation_number();
 	}
-		
+
+	public boolean getGuiDone() {
+		return guiDone;
+	}
+
+	public synchronized void triggerGuiDone() {
+		this.guiDone = true;
+		this.notify();
+	}
 }
