@@ -31,7 +31,7 @@ public class CalTrain extends Application{
 	public static Semaphore mutex;
 	
 
-	public static boolean solType = true;        //use this to check if the user wants a semaphore machine or lock(?)
+	public static boolean solType = false;        //use this to check if the user wants a semaphore machine or lock(?)
 	/** GUI **/
 
 	private static BorderPane mainPane;
@@ -211,8 +211,8 @@ public class CalTrain extends Application{
 				Button semaphores = new Button("Semaphores");
 				Button locks = new Button("Locks");
 
-				semaphores.setOnAction(e2 -> initScreen2(true));
-				locks.setOnAction(e2 -> initScreen2(false));
+				semaphores.setOnAction(e2 -> initScreen2(false));
+				locks.setOnAction(e2 -> initScreen2(true));
 
 				VBox subVBox = new VBox();
 				subVBox.getChildren().addAll(semaphores, locks);
@@ -281,13 +281,13 @@ public class CalTrain extends Application{
 
 
 		semaphoreMenuItem.setOnAction(e -> {
-			solType = true;
-			initScreen2(true);
+			solType = false;
+			initScreen2(solType);
 		});
 
 		lockMenuItem.setOnAction(e -> {
-			solType = false;
-			initScreen2(false);
+			solType = true;
+			initScreen2(solType);
 		});
 
 		restart.setOnAction(e -> {
@@ -701,16 +701,17 @@ public class CalTrain extends Application{
 		transition.setCycleCount(1);
 		transition.play();
 		System.out.println("ZZZZZZZZZZ || " + train1.getTrain_number());
-		try {
-			train1.wait(5);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+
 		transition.setOnFinished(e -> {
 
 			System.out.println("AJLSKLKAS:LASL<AS:KLAS:KLAS:LK:SALK:KASK: || " + train1.getTrain_number());
 			stations.get(station_number - 1).doneTransition(train1);
 		});
 
+		try {
+			train1.wait(5);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 }
