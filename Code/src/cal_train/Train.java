@@ -40,34 +40,12 @@ public class Train extends Thread implements Runnable{
 	
 	@Override
 	public void run() {
-//		int[] a = {0, 1, 2, 3, 4, 5, 6, 7};
-//			for (int i : a){
-//		while(!CalTrain.stations.get(0).getTrainInTheStationSemaphore().tryAcquire()){
-//
-//		}
-				PathTransition transition = CalTrain.moveTrain(this, 0 + 1);
-				transition.setOnFinished(e -> {
-					System.out.println("\nWOW " + 0);
+		PathTransition transition = CalTrain.moveTrain(this, 0 + 1);
+		transition.setOnFinished(e -> {
 
-//				nextStation = CalTrain.stations.get(0);
-//				try {
-//					CalTrain.stations.get(i).join();
-//				} catch (InterruptedException e) {
-//					e.printStackTrace();
-//				}
-
-					CalTrain.stations.get(0).trainArrived(this);
-					currentStation = CalTrain.stations.get(0);
-
-//					PathTransition transition2 = CalTrain.moveTrain(this, 2);
-//					transition2.setOnFinished(e2 -> {
-//						System.out.println("\nWOW " + 1);
-//
-//						CalTrain.stations.get(1).trainArrived(this);
-//					});
-				});
-
-
+			CalTrain.stations.get(0).trainArrived(this);
+			currentStation = CalTrain.stations.get(0);
+		});
 	}
 
 	public void addXPassenger(Passenger p){
@@ -102,7 +80,6 @@ public class Train extends Thread implements Runnable{
 
 		PathTransition transition = CalTrain.moveTrain(this, currentStationNumber < 8 ? currentStationNumber + 1 : 1);
 		transition.setOnFinished(e -> {
-//			System.out.println("TFFFFFFFFFFFF: " +currentStationNumber);
 
 			if (currentStationNumber < 8) {
 				System.out.println("NEW CURRENT STATION: " + stations.get(currentStationNumber).getStation_number());
@@ -123,10 +100,6 @@ public class Train extends Thread implements Runnable{
 				System.out.println("NEW NEXT STATION: " + stations.get(1).getStation_number());
 				nextStation = stations.get(1);
 			}
-
-//		CalTrain.mutex.release();
-//			System.out.println("--> Train released mutex");
-
 		});
 	}
 	

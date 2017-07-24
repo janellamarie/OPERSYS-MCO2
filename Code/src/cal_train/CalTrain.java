@@ -546,6 +546,7 @@ public class CalTrain extends Application{
 
 				if(observablePassengers != null)
 					observablePassengers.removeListener(passengerListChangeListener);
+
 				observablePassengers = stations.get(stationId).getObservablePassengers();
 				passengerListChangeListener = (ListChangeListener<Passenger>) c -> {
 					nPeopleTextField.textProperty().bind(Bindings.concat((stations.get(stationId).getPassengers().size() == 0 ?
@@ -559,10 +560,17 @@ public class CalTrain extends Application{
 							station.getCurrentTrain().getTrain_number()));
 
 					seatsTextField.textProperty().bind(Bindings.concat(station.getCurrentTrain() == null ?
-							"There is no train" : station.getCurrentTrain().getPassengers() == null ? 0 :
-							station.getCurrentTrain().getPassengers() + "/" +
+							"There is no train" : (station.getCurrentTrain().getPassengers() == null ?  "0" :
+							station.getCurrentTrain().getPassengers().size()) + "/" +
 									station.getCurrentTrain().getSeats() + " Seats"));
+
+
+					System.out.println(station.getCurrentTrain() == null ?
+							"There is no train" : station.getCurrentTrain().getPassengers() == null ? "0" :
+							station.getCurrentTrain().getPassengers().size() + "/" +
+									station.getCurrentTrain().getSeats() + " Seats WTF");
 				};
+
 				observablePassengers.addListener(passengerListChangeListener);
 
 				nPeopleTextField.textProperty().bind(Bindings.concat((stations.get(stationId).getPassengers().size() == 0 ?
@@ -576,8 +584,8 @@ public class CalTrain extends Application{
 						station.getCurrentTrain().getTrain_number()));
 
 				seatsTextField.textProperty().bind(Bindings.concat(station.getCurrentTrain() == null ?
-						"There is no train" : station.getCurrentTrain().getPassengers() == null ? 0 :
-						station.getCurrentTrain().getPassengers() + "/" +
+						"There is no train" : station.getCurrentTrain().getPassengers() == null ? "0" :
+						station.getCurrentTrain().getPassengers().size() + "/" +
 								station.getCurrentTrain().getSeats() + " Seats"));
 
 				if (false) {
@@ -684,28 +692,12 @@ public class CalTrain extends Application{
 				destinationChoiceBox.setDisable(true);
 				destinationChoiceBox.setValue(null);
 
-//				trainTextField.setText(String.valueOf(trainId));
-//				observablePassengers.removeListener((ListChangeListener<Passenger>) c -> {
-//					seatsTextField.textProperty().bind(Bindings.concat(train.getPassengers() == null ?
-//									0 : train.getPassengers().size(),
-//							"/", train.getSeats(), " Seats"));
-//
-//					nPeopleTextField.textProperty().bind(Bindings.concat(train.getPassengers().size() == 0 ?
-//							"Nobody is in the train" :
-//							train.getPassengers().size() +
-//									train.getPassengers().size() == 1 ?
-//									" Person " : " People " + "in the train"));
-//
-//					stationTextField.textProperty().bind(Bindings.concat(train.getCurrentStation() == null ?
-//							"Not in a station" : "Station " +
-//							train.getCurrentStation().getStation_number()));
-//				});
-
-				observablePassengers.removeListener(passengerListChangeListener);
+				if(observablePassengers != null)
+					observablePassengers.removeListener(passengerListChangeListener);
 				observablePassengers = train.getObservablePassengers();
 				passengerListChangeListener = (ListChangeListener<Passenger>) c -> {
 					seatsTextField.textProperty().bind(Bindings.concat(train.getPassengers() == null ?
-									0 : train.getPassengers().size(),
+									"0" : train.getPassengers().size(),
 							"/", train.getSeats(), " Seats"));
 
 					nPeopleTextField.textProperty().bind(Bindings.concat(train.getPassengers().size() == 0 ?
@@ -720,16 +712,21 @@ public class CalTrain extends Application{
 				};
 
 				observablePassengers.addListener(passengerListChangeListener);
+				seatsTextField.textProperty().bind(Bindings.concat(train.getPassengers() == null ?
+								"0" : train.getPassengers().size(),
+						"/", train.getSeats(), " Seats"));
 
+				nPeopleTextField.textProperty().bind(Bindings.concat(train.getPassengers().size() == 0 ?
+						"Nobody is in the train" :
+						train.getPassengers().size() +
+								train.getPassengers().size() == 1 ?
+								" Person " : " People " + "in the train"));
 
-//				System.out.println(" LOOOOOOOOOOL " + ((ImageView) e.getSource()).getX() + " " + ((ImageView) e.getSource()).getTranslateX());
-//				PathTransition transition = new PathTransition();
-//				transition.setOrientation(PathTransition.OrientationType.ORTHOGONAL_TO_TANGENT);
-//				transition.setNode((ImageView) e.getSource());
-//				transition.setDuration(Duration.seconds(10));
-//				transition.setPath(polyline);
-//				transition.setCycleCount(1);
-//				transition.play();
+				stationTextField.textProperty().bind(Bindings.concat(train.getCurrentStation() == null ?
+						"Not in a station" : "Station " +
+						train.getCurrentStation().getStation_number()));
+
+				trainTextField.textProperty().bind(Bindings.concat(train.getTrain_number()));
 			});
 
 			train1.setId("Train_" + (i + 1));

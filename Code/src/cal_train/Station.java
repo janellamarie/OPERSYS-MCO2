@@ -1,7 +1,9 @@
 package cal_train;
 
+import javafx.animation.PauseTransition;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.util.Duration;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -63,13 +65,8 @@ public class Station extends Thread{
 	public void doneTransition(Train train){
 //		train.setCurrentStation(this);
 
-//		PauseTransition delay = new PauseTransition(Duration.seconds(1));
 
-//		delay.play();
-//		delay.setOnFinished(e -> {
 
-		train.addXPassenger(new Passenger());
-		addXPassenger(new Passenger());
 			if (CalTrain.solType) {
 				try {
 					trainArrived_locks(train);
@@ -81,7 +78,7 @@ public class Station extends Thread{
 			}
 
 			trainInTheStationSemaphore.release();
-//		});
+
 	}
 
 	/* METHODS FOR SEMAPHORE SOLUTION */
@@ -125,24 +122,30 @@ public class Station extends Thread{
 					}
 				}
 
-				System.out.println("AFTER ADDING (TRAIN): " + currentTrain.getPassengers().size());
-				System.out.println("WAITING: " + passengers.size());
-
-				if(currentTrain.getSeats() - currentTrain.getPassengers().size() == 0)
-					currentTrain.moveTrains();
-				else if (passengers.size() == 0)
-					currentTrain.moveTrains();
-
 			} catch (Exception e){
 				e.printStackTrace();
 			}
 
-			setCurrentTrain(null);
-			releaseStationSemaphore();
-			CalTrain.mutex.release();
-			CalTrain.semaphore.release();
+				train.addXPassenger(new Passenger());
+				addXPassenger(new Passenger());
 
-			System.out.println(currentTrain + " WAWAWA");
+					train.addXPassenger(new Passenger());
+					addXPassenger(new Passenger());
+
+					System.out.println("AFTER ADDING (TRAIN): " + currentTrain.getPassengers().size());
+					System.out.println("WAITING: " + passengers.size());
+
+					if (currentTrain.getSeats() - currentTrain.getPassengers().size() == 0)
+						currentTrain.moveTrains();
+					else if (passengers.size() == 0)
+						currentTrain.moveTrains();
+
+					setCurrentTrain(null);
+					releaseStationSemaphore();
+					CalTrain.mutex.release();
+					CalTrain.semaphore.release();
+
+
 	}
 	
 	/* METHODS FOR LOCKS SOLUTION */
@@ -177,14 +180,21 @@ public class Station extends Thread{
 				}
 			}
 
-			train.moveTrains();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		} finally {
-			System.out.println("Lock: Unlocked -  Train: " + train.getTrain_number() + " (EXIT) Station" + getStation_number());
-			train = null;
-			station_lock.unlock();
-			lock.unlock();
+
+			train.addXPassenger(new Passenger());
+			addXPassenger(new Passenger());
+			PauseTransition delay = new PauseTransition(Duration.seconds(1));
+
+			delay.play();
+			delay.setOnFinished(e -> {
+				train.moveTrains();
+				System.out.println("Lock: Unlocked -  Train: " + train.getTrain_number() + " (EXIT) Station" + getStation_number());
+				station_lock.unlock();
+				lock.unlock();
+			});
 		}
 	}
 
