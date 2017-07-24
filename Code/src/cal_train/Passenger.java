@@ -15,7 +15,11 @@ public class Passenger extends Thread {
 			station_wait_for_train(current);
 		}
 	}
-		
+
+	public Passenger(){
+
+    }
+
 	public Passenger(Station current, Station destination){
 		this.current = current;
 		this.destination = destination;
