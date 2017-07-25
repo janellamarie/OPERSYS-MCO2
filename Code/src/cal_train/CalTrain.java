@@ -53,62 +53,6 @@ public class CalTrain extends Application{
 
 
 
-//	public void run() {
-//		System.out.println("SOLUTION TYPE: ");
-//		System.out.println("[1] Locks \n[2] Semaphores\n");
-//		Scanner sc = new Scanner(System.in);
-//		int x = sc.nextInt();
-//
-//		switch(x){
-//			case 1: solType = true;
-//				break;
-//			case 2: solType = false;
-//				break;
-//		}
-//
-//		/* INITIALIZE GLOBAL VARIABLES */
-//
-//
-//		semaphore = new Semaphore(8);
-//		mutex = new Semaphore(1); 	  // mutual exclusion for threads
-//
-//		System.out.println("STARTING THREADS");
-//
-//		Passenger pass = null;
-//
-//		if(solType){
-//			for(int i = 0; i < stations.size(); i++){
-//				for(int j = 0; j < 15; j++){
-//
-//					pass = new Passenger(stations[i], stations[4]);
-//					pass.start();
-//					stations[i].addPassenger(pass);
-//				}
-//			}
-//
-//			for(int i = 0; i < stations.size(); i++){
-//				System.out.println("Station " + stations[i].getStation_number() + " has " + stations[i].getPassengers().size());
-//			}
-//
-//		} else {
-//			for(int i = 0; i < 8; i++){
-//				if(i < 7){
-//					pass = new Passenger(stations[i], stations[i+1]);
-//				}else{
-//					pass = new Passenger(stations[i], stations[0]);
-//				}
-//
-//				stations[i].addPassenger(pass);
-//				pass.run();
-//			}
-//		}
-//
-//		for(int i = 0; i < 15; i++){
-//			trains[i].start();
-//		}
-//
-//		sc.close();
-//	}
 
 	@Override
 	public void start(Stage primaryStage) {
@@ -201,9 +145,11 @@ public class CalTrain extends Application{
 
 		createTrain.setOnAction(e -> {
 
-			for(int i = 0; i < nTrainsChoiceBox.getValue(); i++)
-				trains.add(new Train(i + 1, spinner.getValue()));
-
+			int temp = trains.size();
+			for(int i = 0; i < nTrainsChoiceBox.getValue(); i++) {
+				System.out.println(temp + " " + i);
+					trains.add(new Train(temp + i + 1, spinner.getValue()));
+			}
 			if(trains.size() == 15) {
 				semaphoreMenuItem.setDisable(false);
 				lockMenuItem.setDisable(false);
@@ -442,7 +388,7 @@ public class CalTrain extends Application{
 		nPeopleSpinner = new Spinner<>(1, Integer.MAX_VALUE, 1, 1);
 
 		//Destination
-		ImageView destinationIcon = new ImageView("images/trainDestination.png"); // Update destinationIcon
+		ImageView destinationIcon = new ImageView("images/trainDestination.png");
 		destinationIcon.setFitHeight(25);
 		destinationIcon.setFitWidth(25);
 		destinationIcon.setPreserveRatio(true);
@@ -546,6 +492,7 @@ public class CalTrain extends Application{
 
 				if(observablePassengers != null)
 					observablePassengers.removeListener(passengerListChangeListener);
+
 				observablePassengers = stations.get(stationId).getObservablePassengers();
 				passengerListChangeListener = (ListChangeListener<Passenger>) c -> {
 					nPeopleTextField.textProperty().bind(Bindings.concat((stations.get(stationId).getPassengers().size() == 0 ?
@@ -559,10 +506,12 @@ public class CalTrain extends Application{
 							station.getCurrentTrain().getTrain_number()));
 
 					seatsTextField.textProperty().bind(Bindings.concat(station.getCurrentTrain() == null ?
-							"There is no train" : station.getCurrentTrain().getPassengers() == null ? 0 :
-							station.getCurrentTrain().getPassengers() + "/" +
-									station.getCurrentTrain().getSeats() + " Seats"));
+							"There is no train" : (station.getCurrentTrain().getPassengers() == null ?  "0" :
+							station.getCurrentTrain().getPassengers().size()) + "/" +
+							station.getCurrentTrain().getSeats() + " Seats"));
+
 				};
+
 				observablePassengers.addListener(passengerListChangeListener);
 
 				nPeopleTextField.textProperty().bind(Bindings.concat((stations.get(stationId).getPassengers().size() == 0 ?
@@ -576,8 +525,8 @@ public class CalTrain extends Application{
 						station.getCurrentTrain().getTrain_number()));
 
 				seatsTextField.textProperty().bind(Bindings.concat(station.getCurrentTrain() == null ?
-						"There is no train" : station.getCurrentTrain().getPassengers() == null ? 0 :
-						station.getCurrentTrain().getPassengers() + "/" +
+						"There is no train" : station.getCurrentTrain().getPassengers() == null ? "0" :
+						station.getCurrentTrain().getPassengers().size() + "/" +
 								station.getCurrentTrain().getSeats() + " Seats"));
 
 				if (false) {
@@ -671,7 +620,7 @@ public class CalTrain extends Application{
 			train1.setOnMouseClicked(e -> {
 				String id = ((ImageView) e.getSource()).getId();
 				int trainId = Integer.parseInt(id.length() == 7 ? String.valueOf(id.charAt(id.length() - 1)) :
-																 id.substring(id.length() - 2, id.length()));
+						id.substring(id.length() - 2, id.length()));
 				Train train = trains.get(trainId - 1);
 
 				seatsTextField.textProperty().unbind();
@@ -684,28 +633,29 @@ public class CalTrain extends Application{
 				destinationChoiceBox.setDisable(true);
 				destinationChoiceBox.setValue(null);
 
-//				trainTextField.setText(String.valueOf(trainId));
-//				observablePassengers.removeListener((ListChangeListener<Passenger>) c -> {
-//					seatsTextField.textProperty().bind(Bindings.concat(train.getPassengers() == null ?
-//									0 : train.getPassengers().size(),
-//							"/", train.getSeats(), " Seats"));
-//
-//					nPeopleTextField.textProperty().bind(Bindings.concat(train.getPassengers().size() == 0 ?
-//							"Nobody is in the train" :
-//							train.getPassengers().size() +
-//									train.getPassengers().size() == 1 ?
-//									" Person " : " People " + "in the train"));
-//
-//					stationTextField.textProperty().bind(Bindings.concat(train.getCurrentStation() == null ?
-//							"Not in a station" : "Station " +
-//							train.getCurrentStation().getStation_number()));
-//				});
-
-				observablePassengers.removeListener(passengerListChangeListener);
+				if(observablePassengers != null)
+					observablePassengers.removeListener(passengerListChangeListener);
 				observablePassengers = train.getObservablePassengers();
+
+				seatsTextField.textProperty().bind(Bindings.concat(train.getPassengers() == null ?
+								"0" : train.getPassengers().size(),
+						"/", train.getSeats(), " Seats"));
+
+				nPeopleTextField.textProperty().bind(Bindings.concat(train.getPassengers().size() == 0 ?
+						"Nobody is in the train" :
+						train.getPassengers().size() +
+								train.getPassengers().size() == 1 ?
+								" Person " : " People " + "in the train"));
+
+				stationTextField.textProperty().bind(Bindings.concat(train.getCurrentStation() == null ?
+						"Not in a station" : "Station " +
+						train.getCurrentStation().getStation_number()));
+
+				trainTextField.textProperty().bind(Bindings.concat(train.getTrain_number()));
+
 				passengerListChangeListener = (ListChangeListener<Passenger>) c -> {
 					seatsTextField.textProperty().bind(Bindings.concat(train.getPassengers() == null ?
-									0 : train.getPassengers().size(),
+									"0" : train.getPassengers().size(),
 							"/", train.getSeats(), " Seats"));
 
 					nPeopleTextField.textProperty().bind(Bindings.concat(train.getPassengers().size() == 0 ?
@@ -720,16 +670,6 @@ public class CalTrain extends Application{
 				};
 
 				observablePassengers.addListener(passengerListChangeListener);
-
-
-//				System.out.println(" LOOOOOOOOOOL " + ((ImageView) e.getSource()).getX() + " " + ((ImageView) e.getSource()).getTranslateX());
-//				PathTransition transition = new PathTransition();
-//				transition.setOrientation(PathTransition.OrientationType.ORTHOGONAL_TO_TANGENT);
-//				transition.setNode((ImageView) e.getSource());
-//				transition.setDuration(Duration.seconds(10));
-//				transition.setPath(polyline);
-//				transition.setCycleCount(1);
-//				transition.play();
 			});
 
 			train1.setId("Train_" + (i + 1));
@@ -737,8 +677,8 @@ public class CalTrain extends Application{
 			field.getChildren().add(train1);
 
 		}
-			vBox.getChildren().add(field);
-			return vBox;
+		vBox.getChildren().add(field);
+		return vBox;
 	}
 
 	public void terminateProgram()

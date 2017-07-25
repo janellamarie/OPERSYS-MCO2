@@ -128,10 +128,11 @@ public class Station extends Thread{
 				System.out.println("AFTER ADDING (TRAIN): " + currentTrain.getPassengers().size());
 				System.out.println("WAITING: " + passengers.size());
 
-				if(currentTrain.getSeats() - currentTrain.getPassengers().size() == 0)
-					currentTrain.moveTrains();
-				else if (passengers.size() == 0)
-					currentTrain.moveTrains();
+
+				train.addXPassenger(new Passenger());
+				addXPassenger(new Passenger());
+
+				currentTrain.moveTrains();
 
 			} catch (Exception e){
 				e.printStackTrace();
@@ -165,21 +166,35 @@ public class Station extends Thread{
 				currentTrain.setNextStation(CalTrain.stations.get(0));
 			}
 
+//
+//			currentTrain.removePassengers();
+//			if(train.getSeats() - train.getPassengers().size() > 0){
+//				passenger_arrival.signalAll();
+//
+//				System.out.println("# of passenger waiting Station " + getStation_number() + ": " + passengers.size());
+//				if(passengers.size() > 0 && train.getSeats() - train.getPassengers().size() > 0){
+//					System.out.println("waiting");
+//					train_leave.await();
+//				}
+//			}
 
-			getOffPassengers();
-			if(train.getSeats() - train.getPassengers().size() > 0){
-				passenger_arrival.signalAll();
 
-				System.out.println("# of passenger waiting Station " + getStation_number() + ": " + passengers.size());
-				if(passengers.size() > 0 && train.getSeats() - train.getPassengers().size() > 0){
-					System.out.println("waiting");
-					train_leave.await();
+			System.out.println("IN TRAIN : " + currentTrain.getPassengers().size());
+			currentTrain.removePassengers();
+
+
+			for(int i = 0; i < passengers.size(); i++) {
+				Passenger p = passengers.get(i);
+				if (currentTrain.getSeats() - currentTrain.getPassengers().size() != 0) {
+					currentTrain.addPassenger(p);
+					observablePassengers.remove(p);
 				}
 			}
 
+			System.out.println("AFTER ADDING (TRAIN): " + currentTrain.getPassengers().size());
+			System.out.println("WAITING: " + passengers.size());
+
 			train.moveTrains();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
 		} finally {
 			System.out.println("Lock: Unlocked -  Train: " + train.getTrain_number() + " (EXIT) Station" + getStation_number());
 			train = null;
@@ -188,22 +203,7 @@ public class Station extends Thread{
 		}
 	}
 
-	public void getOffPassengers() throws InterruptedException {
 
-		System.out.println("There were " + currentTrain.getPassengers().size() + " Passengers in Train " + currentTrain.getTrain_number());
-
-		for (int i = currentTrain.getPassengers().size()-1; i >= 0; i--) {
-			if (getStation_number() == currentTrain.getPassengers().get(i).getDestination().getStation_number()){
-				System.out.println("PASSENGERS OFF in station " + getStation_number() + " headed to " + currentTrain.getPassengers().get(i).getDestination().getStation_number());
-				currentTrain.removePassengers();
-			}
-			//System.out.println(i);
-		}
-		
-		System.out.println("There are now " + currentTrain.getPassengers().size() + " Passengers in Train " + currentTrain.getTrain_number());
-	}
-
-	
 	public void getInPassengers(Passenger pass){
 
 		if (currentTrain.getSeats() - currentTrain.getPassengers().size() > 0){
