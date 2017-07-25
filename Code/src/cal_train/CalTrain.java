@@ -43,16 +43,14 @@ public class CalTrain extends Application{
 	private TextField  trainTextField,
 			stationTextField,
 			seatsTextField,
-			nPeopleTextField;
+			nPeopleTextField,
+			passengerTextField;
 
 	private ChoiceBox<Integer> destinationChoiceBox;
 	private Spinner<Integer> nPeopleSpinner;
 	private MenuItem semaphoreMenuItem,
 			lockMenuItem;
 	private static Scene scene;
-
-
-
 
 	@Override
 	public void start(Stage primaryStage) {
@@ -331,7 +329,7 @@ public class CalTrain extends Application{
 
 	public VBox initRightVBox()
 	{
-		VBox vBox = new VBox();
+		VBox vBox = new VBox(30);
 		vBox.setId("vBoxRight");
 
 		GridPane gridPane = new GridPane();
@@ -395,6 +393,10 @@ public class CalTrain extends Application{
 		destinationChoiceBox = new ChoiceBox<>();
 		destinationChoiceBox.getItems().addAll(1, 2, 3, 4, 5, 6, 7, 8);
 
+		passengerTextField = new TextField();
+		passengerTextField.setDisable(true);
+		passengerTextField.setId("passengerTextField");
+
 
 		Button createPassenger = new Button("Create");
 		createPassenger.setOnAction(e -> {
@@ -408,12 +410,11 @@ public class CalTrain extends Application{
 						passenger.run();
 
 				}
-
+				System.out.println(stations.get(Integer.parseInt(stationTextField.getText()) - 1).getPassengers() + " PPPPPPPPPPPP");
 			}
 
 			destinationChoiceBox.setValue(null);
 			nPeopleSpinner.getValueFactory().setValue(1);
-
 		});
 
 		nPeopleSpinner.setDisable(true);
@@ -434,15 +435,14 @@ public class CalTrain extends Application{
 		GridPane.setConstraints(nPeopleSpinner      , 1, 5);
 		GridPane.setConstraints(destinationIcon     , 0, 4);
 		GridPane.setConstraints(destinationChoiceBox, 1, 4);
-		GridPane.setConstraints(createPassenger     , 1, 6);
 
 		gridPane.getChildren().addAll(stationIcon   , stationTextField, trainIcon,
 				trainTextField, peopleIcon      , nPeopleTextField,
 				seatsIcon     , seatsTextField  , nPeopleSpinner,
 				addPeopleIcon , destinationIcon , destinationChoiceBox,
-				createPassenger);
+				createPassenger, passengerTextField);
 
-		vBox.getChildren().addAll(gridPane);
+		vBox.getChildren().addAll(passengerTextField, gridPane);
 		return vBox;
 	}
 
@@ -466,7 +466,6 @@ public class CalTrain extends Application{
 			trainStation.setGraphic(stationImageView);
 			trainStation.setContentDisplay(ContentDisplay.TOP);
 			trainStation.setGraphicTextGap(-55);
-//            trainStation.setPadding(new Insets(0, 0, 20, 0));
 			trainStation.setId(String.valueOf((i + 1)));
 
 			trainStation.setOnMouseClicked(e -> {
@@ -503,6 +502,8 @@ public class CalTrain extends Application{
 							station.getCurrentTrain().getPassengers().size()) + "/" +
 							station.getCurrentTrain().getSeats() + " Seats"));
 
+//					passengerTextField.setText(station.getPassengers().toString().replaceAll("\\[",
+//							"").replaceAll("]", "").replaceAll(",", "\n"));		//AddXPassenger showing the null pass ERROR
 				};
 
 				observablePassengers.addListener(passengerListChangeListener);
@@ -521,6 +522,9 @@ public class CalTrain extends Application{
 						"There is no train" : station.getCurrentTrain().getPassengers() == null ? "0" :
 						station.getCurrentTrain().getPassengers().size() + "/" +
 								station.getCurrentTrain().getSeats() + " Seats"));
+
+				passengerTextField.setText(station.getPassengers().toString().replaceAll("\\[",			// UPDATE COPY PASTE THIS AND the thing in the observer in the trainsetOnaction
+											"").replaceAll("]", "").replaceAll(",", "\n"));
 
 				if (false) {
 					nPeopleSpinner.setDisable(true);
