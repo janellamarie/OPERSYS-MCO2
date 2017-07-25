@@ -409,13 +409,6 @@ public class CalTrain extends Application{
 
 				}
 
-//				Station station = stations.get(Integer.parseInt(stationTextField.getText()) - 1);
-//
-//				nPeopleTextField.textProperty().bind(Bindings.concat((station.getPassengers().size() == 0 ?
-//						"Nobody is at the station" :
-//						(String.valueOf(station.getPassengers().size()) +
-//								(station.getPassengers().size() == 1 ?
-//										" Person " : " People " + "at the station")))));
 			}
 
 			destinationChoiceBox.setValue(null);
@@ -683,6 +676,11 @@ public class CalTrain extends Application{
 
 	public void terminateProgram()
 	{
+		for(int i = 0; i < trains.size(); i++)
+			trains.get(i).setDaemon(true);
+		for (int i = 0; i < stations.size(); i++)
+			stations.get(i).setDaemon(true);
+
 		System.out.println("\nProgram has been terminated.");
 		Platform.exit();
 		System.exit(0);

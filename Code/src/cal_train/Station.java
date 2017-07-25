@@ -88,18 +88,19 @@ public class Station extends Thread{
 	
 	public void trainArrived_semaphores(Train train){
 
-//			System.out.println("WWWWWWWWW " + ((PathTransition)event.getSource()).getNode().getLayoutX() + " || " + ((PathTransition)event.getSource()).getNode().getLayoutY());
 
-			while(!CalTrain.mutex.tryAcquire()){
-				/* while may nasa cs pa */
-			}
 			try{
-				while(!stationSemaphore.tryAcquire()){
-					/* while may nasa station pa */
+				if(!CalTrain.mutex.tryAcquire())
+					trainArrived_semaphores(train);
+				if(!stationSemaphore.tryAcquire()) /* while may nasa station pa */ {
+					CalTrain.mutex.release();
+					trainArrived_semaphores(train);
 				}
+
 				System.out.println("--> STATION SEMAPHORE ACQUIRED (" + station_number + ") ");
 
 				currentTrain = train;
+
 
 				System.out.println("\nTrain " + train.getTrain_number() + " has arrived in Station # " + station_number);
 
@@ -143,7 +144,6 @@ public class Station extends Thread{
 			CalTrain.mutex.release();
 			CalTrain.semaphore.release();
 
-			System.out.println(currentTrain + " WAWAWA");
 	}
 	
 	/* METHODS FOR LOCKS SOLUTION */
