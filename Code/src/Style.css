@@ -23,7 +23,7 @@
 #rightGridPane > .text-field, #rightGridPane >  .text-field:disabled,
 #rightGridPane > .spinner > .text-field, #rightGridPane >  .spinner /*> .text-field:disabled */,
 #rightGridPane > .choice-box, #rightGridPane > .choice-box:disabled, #rightGridPane > .choice-box > .label,
-#rightGridPane > .button{
+#rightGridPane > .button, #vBoxRight > #passengerTextField, #vBoxRight > #passengerTextField:disabled{
     -fx-opacity           : 1.0;
 	-fx-background-color  : rgba(0, 0, 0, 0.5);/*rgba(124, 91, 88, 1);*/  /*0, 0, 0, 0.5*/
 }
@@ -31,7 +31,7 @@
 .grid-pane > .text-field, .grid-pane >  .text-field:disabled,
 .grid-pane > .spinner > .text-field, .grid-pane >  .spinner /*> .text-field:disabled */,
 .choice-box, .choice-box:disabled, .choice-box > .label,
-.grid-pane > .button{
+.grid-pane > .button, #vBoxRight > #passengerTextField, #vBoxRight > #passengerTextField:disabled{
 	-fx-text-fill		  : white;
 	-fx-prompt-text-fill  : white;
 	-fx-pref-width		  : 150;
@@ -42,6 +42,13 @@
     -fx-border-radius     : 0 0 0 0;
     -fx-background-radius : 0 0 0 0;
 /*    -fx-alignment        : center;*/
+}
+
+#passengerTextField{
+	-fx-pref-width		  : 150;
+	-fx-min-height		  : 150;
+	-fx-pref-height		  : 150;
+	-fx-max-height		  : 150;
 }
 
 .grid-pane > .label{
