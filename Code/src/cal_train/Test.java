@@ -325,8 +325,16 @@ public class Test extends Application {
                 for (int i = 0; i < nPeopleSpinner.getValue(); i++) {
                     Passenger passenger = new Passenger(stations.get(Integer.parseInt(stationTextField.getText()) - 1),
                             stations.get(destinationChoiceBox.getValue() - 1));
+                    passenger.run();
                 }
 
+                Station station = stations.get(Integer.parseInt(stationTextField.getText()) - 1);
+
+                nPeopleTextField.textProperty().bind(Bindings.concat((station.getPassengers().size() == 0 ?
+                        "Nobody is at the station" :
+                        (String.valueOf(station.getPassengers().size()) +
+                                (station.getPassengers().size() == 1 ?
+                                        " Person " : " People " + "at the station")))));
             }
 
             destinationChoiceBox.setValue(null);
@@ -374,7 +382,10 @@ public class Test extends Application {
 
         for(int i = 0; i < 8; i++){
             Label trainStation = new Label("Station " + (i + 1));
-            stations.add(new Station(i + 1));
+            Station newStation = new Station(i + 1);
+            newStation.run();
+            stations.add(newStation);
+
             ImageView stationImageView = new ImageView("images/station.png");
             stationImageView.setFitHeight(100);
             stationImageView.setFitWidth(100);

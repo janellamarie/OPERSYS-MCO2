@@ -15,7 +15,11 @@ public class Passenger extends Thread {
 			station_wait_for_train(current);
 		}
 	}
-		
+
+	public Passenger(){
+
+    }
+
 	public Passenger(Station current, Station destination){
 		this.current = current;
 		this.destination = destination;
@@ -78,6 +82,7 @@ public class Passenger extends Thread {
 
 	@Override
 	public String toString() {
-		return "Passenger [destination=" + destination.getStation_number() + ", current=" + current.getStation_number() + "]";
+		return destination != null ? "Passenger at " + current.getStation_number()  +
+									 " going to " + destination.getStation_number() : "";
 	}
 }

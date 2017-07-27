@@ -1,172 +1,236 @@
 package cal_train;
 
+import javafx.animation.PauseTransition;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.util.Duration;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Random;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-	public class Station extends Thread{
-		
-		private int station_number;
-		private Train currentTrain; 
-		private ArrayList<Passenger> passengers; // waiting passengers
-		
-		private Semaphore stationSemaphore;
-		
-		private Lock lock = new ReentrantLock();
-		private Lock station_lock = new ReentrantLock();
-		private Condition passenger_arrival = station_lock.newCondition();
-		private Condition train_leave = station_lock.newCondition();
-		
-		private Random r = new Random();
-		private int time;
-		
-		public void runPassengerThreads(){
-			for(int i = 0; i < passengers.size(); i++){
-				passengers.get(i).run();
-			}
-		}
-		
-		public Station(int station_number){
-			this.station_number = station_number;
-			stationSemaphore = new Semaphore(1);
-			passengers = new ArrayList<Passenger>();
-			
-			if(CalTrain.solType)
-				time = r.nextInt(999);
-			
-		}
-		
-		public void addPassenger(Passenger p){
-			this.passengers.add(p);
-		}
-		
-		public void trainArrived(Train train) throws InterruptedException {
-			if(CalTrain.solType){
-				trainArrived_locks(train);
-			}else{
+public class Station extends Thread{
+
+	private int station_number;
+	private Train currentTrain;
+	private ArrayList<Passenger> passengers; // waiting passengers
+
+	private Semaphore stationSemaphore;
+
+	private Lock lock = new ReentrantLock();
+	private Lock station_lock = new ReentrantLock();
+	private Condition passenger_arrival = station_lock.newCondition();
+	private Condition train_leave = station_lock.newCondition();
+
+	private transient ObservableList<Passenger> observablePassengers;
+
+	public ObservableList<Passenger> getObservablePassengers() {
+		return observablePassengers;
+	}
+
+	public Station(int station_number){
+		this.station_number = station_number;
+		stationSemaphore = new Semaphore(1);
+		passengers = new ArrayList<>();
+
+		observablePassengers = FXCollections.observableList(passengers);
+	}
+
+	public void addPassenger(Passenger p){
+		observablePassengers.add(p);
+	}
+
+
+
+	public void trainArrived(Train train) {
+//		System.out.println("????????????????????????????????");
+
+//		CalTrain.mutex.tryAcquire();
+
+//
+//		while(!CalTrain.mutex.tryAcquire()){
+//			/* while may nasa cs pa */
+//			System.out.println("WAITING");
+//		}
+		doneTransition(train);
+
+	}
+
+	public void doneTransition(Train train){
+//		train.setCurrentStation(this);
+
+//		PauseTransition delay = new PauseTransition(Duration.seconds(1));
+
+//		delay.play();
+//		delay.setOnFinished(e -> {
+//		CalTrain.notifyPassengerListChangeListener();
+		train.addXPassenger(new Passenger());
+		addXPassenger(new Passenger());
+			if (CalTrain.solType) {
+				try {
+					trainArrived_locks(train);
+				} catch (InterruptedException e2) {
+					e2.printStackTrace();
+				}
+			} else {
 				trainArrived_semaphores(train);
 			}
-		}
-	
+//		});
+	}
+
 	/* METHODS FOR SEMAPHORE SOLUTION */
 	
 	public void trainArrived_semaphores(Train train){
-		
-		while(!CalTrain.mutex.tryAcquire()){
-			/* while may nasa cs pa */
+
+		if(stationSemaphore.availablePermits() == 0 || CalTrain.mutex.availablePermits() == 0) /* while may nasa station pa */ {
+			trainArrived_semaphores(train);
+		} else {
+
+			try {
+				System.out.println("--> STATION SEMAPHORE ACQUIRED (" + station_number + ") ");
+
+				currentTrain = train;
+
+
+				System.out.println("\nTrain " + train.getTrain_number() + " has arrived in Station # " + station_number);
+
+				if (station_number <= 7) {
+					setCurrentTrain(train);
+					currentTrain.setCurrentStation(this);
+					currentTrain.setNextStation(CalTrain.stations.get(station_number));
+				} else {
+					setCurrentTrain(train);
+					currentTrain.setCurrentStation(this);
+					currentTrain.setNextStation(CalTrain.stations.get(0));
+				}
+
+				System.out.println("IN TRAIN : " + currentTrain.getPassengers().size());
+				currentTrain.removePassengers();
+
+
+				for (int i = 0; i < passengers.size(); i++) {
+					Passenger p = passengers.get(i);
+					if (currentTrain.getSeats() - currentTrain.getPassengers().size() != 0) {
+						currentTrain.addPassenger(p);
+						observablePassengers.remove(p);
+					}
+				}
+
+				System.out.println("AFTER ADDING (TRAIN): " + currentTrain.getPassengers().size());
+				System.out.println("WAITING: " + passengers.size());
+
+
+//		CalTrain.notifyPassengerListChangeListener();
+				train.addXPassenger(new Passenger());
+				addXPassenger(new Passenger());
+
+
+			} catch (Exception e) {
+				e.printStackTrace();
+			} finally {
+				PauseTransition delay = new PauseTransition(Duration.seconds(1));
+
+				delay.play();
+				delay.setOnFinished(e -> {
+					setCurrentTrain(train);
+					currentTrain.setCurrentStation(this);
+					currentTrain.moveTrains();
+
+					setCurrentTrain(null);
+					releaseStationSemaphore();
+					CalTrain.mutex.release();
+					CalTrain.semaphore.release();
+				});
+			}
 		}
-		
-		try{
-			while(!stationSemaphore.tryAcquire()){
-				/* while may nasa station pa */
-			}
-		
-			System.out.println("--> STATION SEMAPHORE ACQUIRED (" + station_number + ") ");
-			
-			currentTrain = train;
-			
-			System.out.println("\nTrain " + train.getTrain_number() + " has arrived in Station # " + station_number);
-
-			if(station_number <= 7){
-				setCurrentTrain(train);
-				currentTrain.setCurrentStation(this);
-				currentTrain.setNextStation(CalTrain.stations[station_number]);
-			} else {
-				setCurrentTrain(train);
-				currentTrain.setCurrentStation(this);
-				currentTrain.setNextStation(CalTrain.stations[0]);
-			}
-
-			System.out.println("IN TRAIN : " + currentTrain.getPassengers().size());
-			currentTrain.removePassengers();
-
-			for(int i = 0; i < passengers.size(); i++){
-				currentTrain.addPassenger(passengers.get(i));
-				this.passengers.remove(i);
-			}
-
-			System.out.println("AFTER ADDING (TRAIN): " + currentTrain.getPassengers().size());
-			System.out.println("WAITING: " + passengers.size());
-			
-			if(currentTrain.getSeats() - currentTrain.getPassengers().size() == 0)
-				currentTrain.moveTrains_semaphores();
-			else if (passengers.size() == 0)
-				currentTrain.moveTrains_semaphores();
-			
-		} catch (Exception e){
-			e.printStackTrace();
-		}
-		
-		/* release everything */
-		currentTrain = null;
-		CalTrain.mutex.release();
-		CalTrain.semaphore.release();
-		stationSemaphore.release();
 	}
 	
 	/* METHODS FOR LOCKS SOLUTION */
-	
-	public void getOffPassengers() throws InterruptedException {
-		System.out.println("There were " + currentTrain.getPassengers().size() + " Passengers in Train " + currentTrain.getTrain_number());
 
-		for (int i = currentTrain.getPassengers().size()-1; i >= 0; i--) {
-			if (getStation_number() == currentTrain.getPassengers().get(i).getDestination().getStation_number()){
-				System.out.println("PASSENGERS OFF in station " + getStation_number() + " headed to " + currentTrain.getPassengers().get(i).getDestination().getStation_number());
-				currentTrain.removePassengers();
-			}
-			//System.out.println(i);
-		}
-		
-		System.out.println("There are now " + currentTrain.getPassengers().size() + " Passengers in Train " + currentTrain.getTrain_number());
-	}
-
-	
-	public void getInPassengers(Passenger pass){
-		if (currentTrain.getSeats() - currentTrain.getPassengers().size() > 0){
-			currentTrain.addPassenger(pass);
-			passengers.remove(pass);
-		}else{
-			passengers_waiting(pass);
-		}
-
-	}
-	
 	public void trainArrived_locks(Train train) throws InterruptedException {
 		lock.lock();
 		station_lock.lock();
 		//Thread.sleep(1000);
 		System.out.println("Lock: locked -  Train: " + train.getTrain_number() + " (ENTRY) Station " + getStation_number());
-		
 		try{
 			System.out.println("Train " + train.getTrain_number() + " has arrived in Station " + station_number +  " - "  + getCurrTime());
-			setCurrentTrain(train);
+
+			if(station_number <= 7){
+				setCurrentTrain(train);
+				currentTrain.setCurrentStation(this);
+				currentTrain.setNextStation(CalTrain.stations.get(station_number));
+			} else {
+				setCurrentTrain(train);
+				currentTrain.setCurrentStation(this);
+				currentTrain.setNextStation(CalTrain.stations.get(0));
+			}
+
+//
+//			currentTrain.removePassengers();
+//			if(train.getSeats() - train.getPassengers().size() > 0){
+//				passenger_arrival.signalAll();
+//
+//				System.out.println("# of passenger waiting Station " + getStation_number() + ": " + passengers.size());
+//				if(passengers.size() > 0 && train.getSeats() - train.getPassengers().size() > 0){
+//					System.out.println("waiting");
+//					train_leave.await();
+//				}
+//			}
 
 
-			getOffPassengers();
-			if(train.getSeats() - train.getPassengers().size() > 0){
-				passenger_arrival.signalAll();
+			System.out.println("IN TRAIN : " + currentTrain.getPassengers().size());
+			currentTrain.removePassengers();
 
-				System.out.println("# of passenger waiting Station " + getStation_number() + ": " + passengers.size());
-				if(passengers.size() > 0 && train.getSeats() - train.getPassengers().size() > 0){
-					System.out.println("waiting");
-					train_leave.await();
+
+			for(int i = 0; i < passengers.size(); i++) {
+				Passenger p = passengers.get(i);
+				if (currentTrain.getSeats() - currentTrain.getPassengers().size() != 0) {
+					currentTrain.addPassenger(p);
+					observablePassengers.remove(p);
 				}
 			}
-		} catch (InterruptedException e) {
-			e.printStackTrace();
+
+			System.out.println("AFTER ADDING (TRAIN): " + currentTrain.getPassengers().size());
+			System.out.println("WAITING: " + passengers.size());
+
+			currentTrain.addXPassenger(new Passenger());
+			addXPassenger(new Passenger());
+
 		} finally {
-			System.out.println("Lock: Unlocked -  Train: " + train.getTrain_number() + " (EXIT) Station" + getStation_number());
-			train = null;
-			station_lock.unlock();
-			lock.unlock();
+			PauseTransition delay = new PauseTransition(Duration.seconds(1));
+
+			delay.play();
+			delay.setOnFinished(e -> {
+				setCurrentTrain(train);
+				currentTrain.moveTrains();
+				System.out.println("Lock: Unlocked -  Train: " + train.getTrain_number() + " (EXIT) Station" + getStation_number());
+				currentTrain = null;
+				station_lock.unlock();
+				lock.unlock();
+			});
 		}
 	}
-	
+
+
+	public void getInPassengers(Passenger pass){
+
+		if (currentTrain.getSeats() - currentTrain.getPassengers().size() > 0){
+			currentTrain.addPassenger(pass);
+			observablePassengers.remove(pass);
+		}else{
+			passengers_waiting(pass);
+		}
+
+	}
+	public void addXPassenger(Passenger p){
+		observablePassengers.add(p);
+		observablePassengers.remove(p);
+	}
+
 	public void passengers_waiting(Passenger pass){
 		station_lock.lock();
 		try{
@@ -263,26 +327,9 @@ import java.util.concurrent.locks.ReentrantLock;
 	}
 	
 
-	public Random getR() {
-		return r;
-	}
-	
 
-	public void setR(Random r) {
-		this.r = r;
-	}
-	
-
-	public int getTime() {
-		return time;
-	}
-	
-
-	public void setTime(int time) {
-		this.time = time;
+	public void releaseStationSemaphore() {
+		stationSemaphore.release();
 	}
 
-	public void run(){
-
-	}
 }
