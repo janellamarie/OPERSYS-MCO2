@@ -40,16 +40,17 @@ public class CalTrain extends Application{
 	private static BorderPane mainPane;
 	private ObservableList<Passenger> observablePassengers;
 	private static ListChangeListener<Passenger> passengerListChangeListener;
-	private TextField  trainTextField;
-	private TextField stationTextField;
-	private TextField seatsTextField;
-	private TextField nPeopleTextField;
+
+	private TextField  trainTextField, stationTextField,
+					  seatsTextField, nPeopleTextField;
+
 	private TextArea passengerTextField;
 
 	private ChoiceBox<Integer> destinationChoiceBox;
+	private ChoiceBox<String> chosenChoiceBox;
 	private Spinner<Integer> nPeopleSpinner;
 	private MenuItem semaphoreMenuItem,
-			lockMenuItem;
+				  	 lockMenuItem;
 	private static Scene scene;
 
 	@Override
@@ -356,7 +357,7 @@ public class CalTrain extends Application{
 		stationTextField.setPromptText("Station Number");
 
 		//Train Number
-		ImageView trainIcon = new ImageView("images/trainSubIcon2.png");
+		ImageView trainIcon = new ImageView("images/trainNumberIcon.png");
 		trainIcon.setFitHeight(25);
 		trainIcon.setFitWidth(25);
 		trainIcon.setPreserveRatio(true);
@@ -386,6 +387,17 @@ public class CalTrain extends Application{
 		seatsTextField.setDisable(true);
 		seatsTextField.setPromptText("A/T Seats");
 
+		//Chosen Train Number
+		ImageView chosenTrain = new ImageView("images/trainSubIcon2.png");
+		chosenTrain.setFitHeight(25);
+		chosenTrain.setFitWidth(25);
+		chosenTrain.setPreserveRatio(true);
+
+		chosenChoiceBox = new ChoiceBox<>();
+		chosenChoiceBox.getItems().addAll("", "1", "2", "3", "4", "5", "6", "7", "8",
+										  "9", "10", "11", "12", "13", "14", "15");
+		chosenChoiceBox.setValue("");
+
 		//Add People
 		ImageView addPeopleIcon = new ImageView("images/addPeopleIcon.png");
 		addPeopleIcon.setFitHeight(25);
@@ -407,7 +419,7 @@ public class CalTrain extends Application{
 
 
 		passengerTextField = new TextArea();
-		passengerTextField.setDisable(true);
+		passengerTextField.setEditable(false);
 		passengerTextField.setId("passengerTextField");
 //		ScenicView a = new ScenicView();
 //		a.show(passengerTextField);
@@ -418,7 +430,10 @@ public class CalTrain extends Application{
 			if(destinationChoiceBox.getValue() != null) {
 				for (int i = 0; i < nPeopleSpinner.getValue(); i++) {
 					Passenger passenger = new Passenger(stations.get(Integer.parseInt(stationTextField.getText()) - 1),
-							stations.get(destinationChoiceBox.getValue() - 1));
+														stations.get(destinationChoiceBox.getValue() - 1));
+					passenger.setChosenTrainNumber(chosenChoiceBox.getValue().length() != 0 ?
+												   Integer.parseInt(chosenChoiceBox.getValue()): -1);
+
 					if(solType)
 						passenger.start();
 					else
@@ -430,6 +445,7 @@ public class CalTrain extends Application{
 
 			destinationChoiceBox.setValue(null);
 			nPeopleSpinner.getValueFactory().setValue(1);
+			chosenChoiceBox.setValue("");
 		});
 
 		nPeopleSpinner.setDisable(true);
@@ -446,19 +462,22 @@ public class CalTrain extends Application{
 		GridPane.setConstraints(seatsIcon           , 0, 3);
 		GridPane.setConstraints(seatsTextField      , 1, 3);
 
-		GridPane.setConstraints(addPeopleIcon       , 0, 5);
-		GridPane.setConstraints(nPeopleSpinner      , 1, 5);
-		GridPane.setConstraints(destinationIcon     , 0, 4);
-		GridPane.setConstraints(destinationChoiceBox, 1, 4);
-		GridPane.setConstraints(createPassenger     , 1, 6);
-		GridPane.setConstraints(emptyPane    		, 1, 7);
-		GridPane.setConstraints(passengerTextField  , 1, 8);
+		GridPane.setConstraints(chosenTrain         , 0, 4);
+		GridPane.setConstraints(chosenChoiceBox, 1, 4);
+		GridPane.setConstraints(addPeopleIcon       , 0, 6);
+		GridPane.setConstraints(nPeopleSpinner      , 1, 6);
+		GridPane.setConstraints(destinationIcon     , 0, 5);
+		GridPane.setConstraints(destinationChoiceBox, 1, 5);
+		GridPane.setConstraints(createPassenger     , 1, 7);
+		GridPane.setConstraints(emptyPane    		, 1, 8);
+		GridPane.setConstraints(passengerTextField  , 1, 9);
 
 		gridPane.getChildren().addAll(stationIcon   , stationTextField, trainIcon,
-				trainTextField, peopleIcon      , nPeopleTextField,
-				seatsIcon     , seatsTextField  , nPeopleSpinner,
-				addPeopleIcon , destinationIcon , destinationChoiceBox,
-				createPassenger, passengerTextField, emptyPane);
+									  trainTextField, peopleIcon      , nPeopleTextField,
+									  seatsIcon     , seatsTextField  , chosenTrain,
+									  chosenChoiceBox, nPeopleSpinner,
+									  addPeopleIcon , destinationIcon , destinationChoiceBox,
+									  createPassenger, passengerTextField, emptyPane);
 
 		vBox.getChildren().addAll(gridPane);
 		return vBox;
@@ -575,8 +594,8 @@ public class CalTrain extends Application{
 
 		for (int i = 0; i < 15; i++) {
 			ImageView train1 = new ImageView("images/train2.png");
-			train1.setFitHeight(50);
-			train1.setFitWidth(50);
+			train1.setFitHeight(38);
+			train1.setFitWidth(29);
 
 			if (i < 4) {
 				if (i == 0)
@@ -595,8 +614,7 @@ public class CalTrain extends Application{
 				train1.setY(500);
 			}
 
-
-			train1.setPreserveRatio(true);
+//			train1.setPreserveRatio(true);
 
 			if(i % 4 == 0 ) {
 				Polyline polyline = new Polyline();

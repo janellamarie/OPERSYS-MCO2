@@ -114,7 +114,8 @@ public class Station extends Thread{
 
 				for (int i = 0; i < passengers.size(); i++) {
 					Passenger p = passengers.get(i);
-					if (currentTrain.getSeats() - currentTrain.getPassengers().size() != 0) {
+					if (p.getChosenTrainNumber() == -1 || p.getChosenTrainNumber() == currentTrain.getTrain_number() &&
+					    currentTrain.getSeats() - currentTrain.getPassengers().size() != 0) {
 						currentTrain.addPassenger(p);
 						observablePassengers.remove(p);
 					}

@@ -2,6 +2,7 @@ package cal_train;
 
 public class Passenger extends Thread {
 
+	private int chosenTrainNumber;
 	private Station destination;
 	private Station current;
 	
@@ -84,5 +85,13 @@ public class Passenger extends Thread {
 	public String toString() {
 		return destination != null ? "Passenger at " + current.getStation_number()  +
 									 " going to " + destination.getStation_number() : "";
+	}
+
+	public int getChosenTrainNumber() {
+		return chosenTrainNumber;
+	}
+
+	public void setChosenTrainNumber(int chosenTrainNumber) {
+		this.chosenTrainNumber = chosenTrainNumber;
 	}
 }

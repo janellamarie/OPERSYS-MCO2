@@ -20,18 +20,15 @@
     -fx-alignment        : center;
 }
 
-#rightGridPane > .text-field, #rightGridPane >  .text-field:disabled,
-#rightGridPane > .spinner > .text-field, #rightGridPane >  .spinner /*> .text-field:disabled */,
-#rightGridPane > .choice-box, #rightGridPane > .choice-box:disabled, #rightGridPane > .choice-box > .label,
-#rightGridPane > .button{
-    -fx-opacity           : 1.0;
-	-fx-background-color  : rgba(0, 0, 0, 0.5);/*rgba(124, 91, 88, 1);*/  /*0, 0, 0, 0.5*/
+.spinner, .spinner > .text-field{
+	-fx-background-color  : rgba(158, 110, 74, 0.5);
 }
 
+
 .grid-pane > .text-field, .grid-pane >  .text-field:disabled,
-.grid-pane > .spinner > .text-field, .grid-pane >  .spinner /*> .text-field:disabled */,
-.choice-box, .choice-box:disabled, .choice-box > .label,
-.grid-pane > .button{
+/* .grid-pane >  .spinner*/ /*> .text-field:disabled *//*,*/
+.choice-box, .choice-box:disabled, .spinner, .spinner > .text-field,
+.text-area, .text-area > .content, .grid-pane > .button{
 	-fx-text-fill		  : white;
 	-fx-prompt-text-fill  : white;
 	-fx-pref-width		  : 150;
@@ -43,9 +40,42 @@
     -fx-background-radius : 0 0 0 0;
 /*    -fx-alignment        : center;*/
 }
+#rightGridPane > .text-field, #rightGridPane >  .text-field:disabled,
+/* #rightGridPane >  .spinner *//*> .text-field:disabled *//*,*/
+#rightGridPane > .choice-box, #rightGridPane > .choice-box:disabled,
+#rightGridPane > .spinner > .text-field,
+#rightGridPane > .button, .scroll-pane, .scroll-pane:disabled,
+#rightGridPane > .spinner, #rightGridPane > .spinner > .text-field{
+    -fx-opacity           : 1.0;
+	-fx-background-color  : rgba(0, 0, 0, 0.5);/*rgba(124, 91, 88, 1);*/  /*0, 0, 0, 0.5*/
+}
 
-.grid-pane > .label{
-    -fx-text-fill         : white;
+#passengerTextField .content{
+    -fx-opacity           : 1.0;
+    -fx-background-color : black;
+}
+
+.spinner > .text-field, #rightGridPane > .spinner > .text-field,
+#passengerTextField, .passengerTextField > .scroll-pane {
+	-fx-background-color  : null;
+}
+
+.choice-box .text, .spinner .label, .grid-pane .button .text, .grid-pane .label, #rightGridPane > .choice-box > .label,
+#rightGridPane .text{
+	-fx-text-fill		  : white;
+	-fx-prompt-text-fill  : white;
+	-fx-background-color  : rgba(0, 0, 0, 0);
+}
+
+#passengerTextField .content, #subVBox .button{
+	-fx-text-fill		  : white;
+	-fx-prompt-text-fill  : white;
+}
+
+#passengerTextField{
+	-fx-pref-width		  : 250;
+	-fx-min-height		  : 150;
+	-fx-max-height		  : 150;
 }
 
 .grid-pane > .button{
@@ -137,15 +167,15 @@
 {
 	-fx-background-radius: 0, 0, 0, 0;
     -fx-effect: dropshadow( one-pass-box , black, 0, 2.0 , 3.5, 3.5);
-}    
+}
 
 
 .createButton{
 	-fx-text-fill		 : #FFFFFF;
-	-fx-background-color : firebrick; 
-	-fx-border-color 	 : firebrick; 
+	-fx-background-color : firebrick;
+	-fx-border-color 	 : firebrick;
 	-fx-background-radius: 0, 0, 0, 0;
-	
+
 }
 
 
