@@ -134,6 +134,7 @@ public class Station extends Thread{
 				e.printStackTrace();
 			} finally {
 				PauseTransition delay = new PauseTransition(Duration.seconds(1));
+				train.setTransition(delay);
 
 				delay.play();
 				delay.setOnFinished(e -> {
@@ -203,7 +204,7 @@ public class Station extends Thread{
 
 		} finally {
 			PauseTransition delay = new PauseTransition(Duration.seconds(1));
-
+			train.setTransition(delay);
 			delay.play();
 			delay.setOnFinished(e -> {
 				setCurrentTrain(train);

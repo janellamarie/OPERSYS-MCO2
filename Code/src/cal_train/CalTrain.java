@@ -106,6 +106,7 @@ public class CalTrain extends Application{
 		mainPane.setTop(initTopBar());
 		semaphoreMenuItem.setDisable(true);
 		lockMenuItem.setDisable(true);
+
 		mainPane.setStyle("-fx-background-color : null;");
 
 		VBox centerVBox = new VBox(90);
@@ -211,6 +212,9 @@ public class CalTrain extends Application{
 			delay.setDelay(Duration.seconds(2.5));
 			System.out.println("Start trains");
 
+			for(int i = 0; i < 15; i++)
+				trains.get(i).setTransition(delay);
+
 			trains.get(0).run();
 			delay.play();
 			delay.setOnFinished(e2 -> {
@@ -299,11 +303,11 @@ public class CalTrain extends Application{
 		MenuItem about     = new MenuItem("_About");
 		MenuItem restart   = new MenuItem("_Restart");
 		MenuItem pause   = new MenuItem("_Pause");
-		MenuItem start   = new MenuItem("_Start");
+		MenuItem start   = new MenuItem("Re_sume");
 		semaphoreMenuItem  = new MenuItem("_Semaphore");
 		lockMenuItem       = new MenuItem("_Lock");
 
-		machine.getItems().addAll(semaphoreMenuItem, lockMenuItem, restart);
+		machine.getItems().addAll(/*semaphoreMenuItem, lockMenuItem, */restart);
 		menu.getItems().addAll(machine, new SeparatorMenuItem(), pause, start, new SeparatorMenuItem(), about, exit);
 
 		MenuBar menuBar = new MenuBar();
@@ -311,22 +315,26 @@ public class CalTrain extends Application{
 
 		exit.setOnAction(e -> terminateProgram());
 
-
-		semaphoreMenuItem.setOnAction(e -> {
-			solType = false;
-			stopAllThreads();
-			initScreen2(solType);
-		});
-
-		lockMenuItem.setOnAction(e -> {
-			solType = true;
-			stopAllThreads();
-			initScreen2(solType);
-		});
+//		semaphoreMenuItem.setOnAction(e -> {
+//			solType = false;
+//			stopAllThreads();
+//			initScreen2(solType);
+//		});
+//
+//		lockMenuItem.setOnAction(e -> {
+//			solType = true;
+//			stopAllThreads();
+//			initScreen2(solType);
+//		});
 
 		restart.setOnAction(e -> {
 			stopAllThreads();
+			trains.clear();
 			initScreen1();
+		});
+
+		pause.setOnAction(e -> {
+			stopAllThreads();
 		});
 
 		start.setOnAction(e -> {
@@ -723,18 +731,18 @@ public class CalTrain extends Application{
 	public void stopAllThreads()
 	{
 		for(int i = 0; i < trains.size(); i++)
-			trains.get(i).setDaemon(true);
-		for (int i = 0; i < stations.size(); i++)
-			stations.get(i).setDaemon(true);
+			trains.get(i).stopTransition(true);
+//		for (int i = 0; i < stations.size(); i++)
+//			stations.get(i).setDaemon(true);
 
 	}
 
 	public void runAllThreads()
 	{
 		for(int i = 0; i < trains.size(); i++)
-			trains.get(i).setDaemon(false);
-		for (int i = 0; i < stations.size(); i++)
-			stations.get(i).setDaemon(false);
+			trains.get(i).stopTransition(false);
+//		for (int i = 0; i < stations.size(); i++)
+//			stations.get(i).setDaemon(false);
 	}
 	public void terminateProgram()
 	{
@@ -860,7 +868,9 @@ public class CalTrain extends Application{
 		transition.setDuration(Duration.seconds(4));
 		transition.setPath(polyline);
 		transition.setCycleCount(1);
+		train1.setTransition(transition);
 		transition.play();
+
 		return transition;
 	}
 }

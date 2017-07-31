@@ -1,6 +1,6 @@
 package cal_train;
 
-import javafx.animation.PathTransition;
+import javafx.animation.Transition;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -20,6 +20,7 @@ public class Train extends Thread implements Runnable{
 	private boolean guiDone = false;
 
 	private transient ObservableList<Passenger> observablePassengers;
+	private Transition transition;
 
 	public Train(int train_number, int count){
 		seats = count;
@@ -45,7 +46,7 @@ public class Train extends Thread implements Runnable{
 //		while(!CalTrain.stations.get(0).getTrainInTheStationSemaphore().tryAcquire()){
 //
 //		}
-				PathTransition transition = CalTrain.moveTrain(this, 0 + 1);
+				transition = CalTrain.moveTrain(this, 0 + 1);
 				transition.setOnFinished(e -> {
 					System.out.println("\nWOW " + 0);
 
@@ -99,7 +100,7 @@ public class Train extends Thread implements Runnable{
 
 		addXPassenger(new Passenger());
 
-		PathTransition transition = CalTrain.moveTrain(this, currentStationNumber < 8 ? currentStationNumber + 1 : 1);
+		transition = CalTrain.moveTrain(this, currentStationNumber < 8 ? currentStationNumber + 1 : 1);
 		transition.setOnFinished(e -> {
 //			System.out.println("TFFFFFFFFFFFF: " +currentStationNumber);
 
@@ -200,5 +201,17 @@ public class Train extends Thread implements Runnable{
 	public synchronized void triggerGuiDone() {
 		this.guiDone = true;
 		this.notify();
+	}
+
+	public void stopTransition(boolean b) {
+		if(transition != null)
+			if(b)
+				transition.pause();
+			else
+				transition.play();
+	}
+
+	public void setTransition(Transition transition) {
+		this.transition = transition;
 	}
 }
