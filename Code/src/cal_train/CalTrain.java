@@ -604,6 +604,8 @@ public class CalTrain extends Application{
 			ImageView train1 = new ImageView("images/train2.png");
 			train1.setFitHeight(38);
 			train1.setFitWidth(29);
+			train1.setLayoutX(10);
+			train1.setLayoutY(2.5);
 
 			if (i < 4) {
 				if (i == 0)
@@ -627,7 +629,7 @@ public class CalTrain extends Application{
 			if(i % 4 == 0 ) {
 				Polyline polyline = new Polyline();
 				polyline.setLayoutX(25);
-				polyline.setLayoutY(25);
+				polyline.setLayoutY(20);
 				polyline.getPoints().addAll(
 						train1.getX(), train1.getY(),
 						600.0 - 40, train1.getY(),
@@ -656,7 +658,33 @@ public class CalTrain extends Application{
 
 				field.getChildren().add(polyline);
 			}
+		}
 
+		for (int i = 0; i < 15; i++) {
+			ImageView train1 = new ImageView("images/train2.png");
+			train1.setFitHeight(38);
+			train1.setFitWidth(29);
+			train1.setLayoutX(10);
+			train1.setLayoutY(2.5);
+
+			if (i < 4) {
+				if (i == 0)
+					train1.setImage(new Image("images/train1.png"));
+
+				train1.setX(450 - (75 * i));
+				train1.setY(425);
+			} else if (i < 8) {
+				train1.setX(450 - (75 * (i - 4)));
+				train1.setY(450);
+			} else if (i < 12) {
+				train1.setX(450 - (75 * (i - 8)));
+				train1.setY(475);
+			} else if (i < 16) {
+				train1.setX(375 - (75 * (i - 12)));
+				train1.setY(500);
+			}
+
+//			train1.setPreserveRatio(true);
 
 			train1.setOnMouseClicked(e -> {
 				String id = ((ImageView) e.getSource()).getId();
@@ -724,6 +752,7 @@ public class CalTrain extends Application{
 			field.getChildren().add(train1);
 
 		}
+
 		vBox.getChildren().add(field);
 		return vBox;
 	}
@@ -779,8 +808,8 @@ public class CalTrain extends Application{
 
 		train1.setCurrentStation(null);
 		Polyline polyline = new Polyline();
-		polyline.setLayoutX(25);
-		polyline.setLayoutY(25);
+		polyline.setLayoutX(15);
+		polyline.setLayoutY(18.5);
 
 		if(train1.getNextStation() == null)
 			polyline.getPoints().addAll(train.getX(), train.getY(),
